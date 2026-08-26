@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+const ArrowIcon = () => <img className="ui-arrow" src={assetPath("icons/arrow-up-right.svg")} alt="" aria-hidden="true" />;
+const RotateIcon = () => <img className="ui-rotate" src={assetPath("icons/rotate-cw.svg")} alt="" aria-hidden="true" />;
+const BagIcon = () => <img className="ui-bag" src={assetPath("icons/shopping-bag.svg")} alt="" aria-hidden="true" />;
 
 const categories = [
   { title: "Rings", text: "Stack, mix, make it yours", image: assetPath("images/rose-hero.jpg") },
@@ -80,7 +83,7 @@ export default function Home() {
     <main>
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <button className="icon-button menu-trigger" aria-label="Open menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}>
-          <span /><span />
+          <span /><span /><span />
         </button>
         <nav className="desktop-nav desktop-nav-left" aria-label="Primary">
           <a href="#collections">Collections</a><a href="#dopamine">New</a><a href="#moods">Shop by mood</a>
@@ -89,7 +92,7 @@ export default function Home() {
         <nav className="desktop-nav desktop-nav-right" aria-label="Services">
           <a href="#concierge">Concierge</a><button aria-label="Search">Search</button><button aria-label="Shopping bag">Bag <sup>0</sup></button>
         </nav>
-        <button className="mobile-bag" aria-label="Shopping bag">Bag <sup>0</sup></button>
+        <button className="mobile-bag" aria-label="Shopping bag"><BagIcon /></button>
       </header>
 
       <section id="top" className="hero">
@@ -105,7 +108,7 @@ export default function Home() {
           <p className="hero-description">Natural and lab-grown diamonds in 18K gold, made for women who never blend in.</p>
           <div className="hero-actions">
             <a className="button button-light" href="#dopamine">Discover Rosé Dopamine</a>
-            <a className="text-link" href="#products">Shop rings <span>↗</span></a>
+            <a className="text-link" href="#products">Shop rings <ArrowIcon /></a>
           </div>
         </div>
         <a className="scroll-cue" href="#collections"><span /> Discover</a>
@@ -124,7 +127,7 @@ export default function Home() {
           {categories.map((category, index) => (
             <a className={`category-card category-${index + 1}`} href="#products" key={category.title}>
               <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} /></div>
-              <div className="category-meta"><div><h3>{category.title}</h3><p>{category.text}</p></div><span className="round-arrow">↗</span></div>
+              <div className="category-meta"><div><h3>{category.title}</h3><p>{category.text}</p></div><span className="round-arrow"><ArrowIcon /></span></div>
             </a>
           ))}
         </div>
@@ -138,21 +141,21 @@ export default function Home() {
           <p className="eyebrow">New collection</p>
           <h2>Diamonds<br /><span className="diamond-text diamond-pink">with a pulse.</span></h2>
           <p>Lab-grown diamonds and coloured sapphires, arranged like tiny hits of energy. Precious, vivid and designed to stack your own way.</p>
-          <a className="button button-ink" href="#products">Enter Rosé Dopamine <span>↗</span></a>
+          <a className="button button-ink" href="#products">Enter Rosé Dopamine <ArrowIcon /></a>
         </div>
       </section>
 
       <section id="products" className="section products reveal">
         <div className="product-heading">
           <div><p className="eyebrow eyebrow-dark">New &amp; most wanted</p><h2>Pieces with<br />personality.</h2></div>
-          <a className="text-link text-link-dark" href="#collections">Shop all jewellery <span>↗</span></a>
+          <a className="text-link text-link-dark" href="#collections">Shop all jewellery <ArrowIcon /></a>
         </div>
         <div className="product-rail">
           {products.map((product) => (
             <article className="product-card" key={product.name}>
               <a className={`product-image product-${product.tone}`} href="#concierge">
                 <img src={product.image} alt={product.name} />
-                <span className="product-hover">View piece ↗</span>
+                <span className="product-hover">View piece <ArrowIcon /></span>
               </a>
               <div className="product-meta"><div><h3>{product.name}</h3><p>{product.detail}</p></div><a href="#concierge">Discover</a></div>
             </article>
@@ -163,7 +166,6 @@ export default function Home() {
       <section className="stack-story reveal">
         <div className="stack-photo">
           <img src={assetPath("images/shop-the-stack.jpg")} alt="A hand wearing a colourful stack of Rosé diamond rings" />
-          <div className="stack-image-caption"><img src={assetPath("icons/stack-layers.svg")} alt="" aria-hidden="true" /><span>One stack.<br />Your colour story.</span></div>
         </div>
         <div className="stack-copy">
           <p className="eyebrow">Shop the stack</p>
@@ -174,7 +176,7 @@ export default function Home() {
             <span><img className="stack-step-icon" src={assetPath("icons/stack-palette.svg")} alt="" aria-hidden="true" /><b>Add colour</b><em>Match it or make it clash</em></span>
             <span><img className="stack-step-icon" src={assetPath("icons/stack-layers.svg")} alt="" aria-hidden="true" /><b>Make it yours</b><em>Stack two, three or more</em></span>
           </div>
-          <div className="stack-actions"><a className="button button-light" href="#products">Shop the complete stack</a><a className="text-link" href="#concierge">Ask a stylist <span>↗</span></a></div>
+          <div className="stack-actions"><a className="button button-light" href="#products">Shop the complete stack</a><a className="text-link" href="#concierge">Ask a stylist <ArrowIcon /></a></div>
         </div>
       </section>
 
@@ -185,16 +187,16 @@ export default function Home() {
             <a className={`mood-card ${mood.className}`} href="#products" key={mood.name}>
               <img src={mood.image} alt={`${mood.name} jewellery edit`} />
               <span className="mood-wash" />
-              <span className="mood-card-copy"><small>{mood.label}</small><b>{mood.name}</b><em>{mood.copy}</em><i>Shop this mood ↗</i></span>
+              <span className="mood-card-copy"><small>{mood.label}</small><b>{mood.name}</b><em>{mood.copy}</em><i>Shop this mood <ArrowIcon /></i></span>
             </a>
           ))}
         </div>
       </section>
 
       <section className="design-piece section reveal">
-        <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><div className="render-requirement"><i className="line-icon" aria-hidden="true">↻</i><span><b>Interactive 360° preview</b><small>The final experience uses a dedicated GLB product model—not a simulated CSS ring.</small></span></div><a className="button button-ink" href="#concierge">Start designing ↗</a></div>
+        <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><div className="render-requirement"><RotateIcon /><span><b>Interactive 360° preview</b><small>The final experience uses a dedicated GLB product model—not a simulated CSS ring.</small></span></div><a className="button button-ink" href="#concierge">Start designing <ArrowIcon /></a></div>
         <div className="design-studio">
-          <div className="design-preview"><img src={assetPath("images/rose-hero.jpg")} alt="Pink oval diamond ring preview" /><span><i className="line-icon" aria-hidden="true">↻</i> 360° MODEL AREA</span></div>
+          <div className="design-preview"><img src={assetPath("images/rose-hero.jpg")} alt="Pink oval diamond ring preview" /><span><RotateIcon /> 360° MODEL AREA</span></div>
           <div className="design-controls">
             {designOptions.map(({ label, value, icon }, index) => <button key={label}><i className="line-icon" aria-hidden="true">{icon}</i><small>0{index + 1}</small><b>{label}</b><span>{value}</span></button>)}
           </div>
@@ -215,21 +217,21 @@ export default function Home() {
         </picture>
         <div className="concierge-content">
           <p className="eyebrow">Private concierge</p><h2>Need a little<br />help choosing?</h2><p>Talk to a Rosé specialist about stones, sizing, styling or a piece made entirely for you.</p>
-          <div className="concierge-actions"><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="text-link" href="https://wa.me/85292270884">Chat on WhatsApp ↗</a></div>
+          <div className="concierge-actions"><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="text-link" href="https://wa.me/85292270884">Chat on WhatsApp <ArrowIcon /></a></div>
         </div>
       </section>
 
       <footer id="footer">
         <div className="footer-brand"><span className="wordmark">ROSÉ<small>DIAMONDS</small></span><p>Brilliance, in every mood.</p></div>
         <div className="footer-links"><div><small>JEWELLERY</small><a href="#collections">Rings</a><a href="#collections">Necklaces</a><a href="#collections">Earrings</a><a href="#collections">Bracelets</a></div><div><small>THE HOUSE</small><a href="#dopamine">Rosé Dopamine</a><a href="#moods">Shop by mood</a><a href="#concierge">Design your piece</a><a href="#concierge">Concierge</a></div><div><small>CLIENT CARE</small><a href="#footer">Delivery &amp; returns</a><a href="#footer">Size guide</a><a href="#footer">Jewellery care</a><a href="#footer">Contact</a></div></div>
-        <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form><label className="sr-only" htmlFor="email">Email address</label><input id="email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe">↗</button></form></div>
+        <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form><label className="sr-only" htmlFor="email">Email address</label><input id="email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe"><ArrowIcon /></button></form></div>
         <div className="footer-bottom"><span>© 2026 Rosé Diamonds Ltd.</span><span>Hong Kong · Worldwide delivery</span><div className="footer-socials"><a href="#footer" aria-label="Instagram"><img src={assetPath("icons/instagram.svg")} alt="" /></a><a href="#footer" aria-label="TikTok"><img src={assetPath("icons/tiktok.svg")} alt="" /></a><a href="#footer" aria-label="Pinterest"><img src={assetPath("icons/pinterest.svg")} alt="" /></a></div></div>
       </footer>
 
       {menuOpen && (
         <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Main menu">
-          <div className="menu-top"><button className="menu-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button><span className="wordmark menu-wordmark">ROSÉ<small>DIAMONDS</small></span><span className="menu-count">Bag <sup>0</sup></span></div>
-          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><small>0{i + 1}</small><span>{item}</span><b>↗</b></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.jpg")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
+          <div className="menu-top"><button className="menu-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button><span className="wordmark menu-wordmark">ROSÉ<small>DIAMONDS</small></span><button className="menu-bag" aria-label="Shopping bag"><BagIcon /></button></div>
+          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><span>{item}</span></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.jpg")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
           <div className="menu-service"><a href="#concierge" onClick={() => setMenuOpen(false)}>Private concierge</a><a href="#footer" onClick={() => setMenuOpen(false)}>Delivery &amp; returns</a><a href="#footer" onClick={() => setMenuOpen(false)}>Language / Region</a><a href="#footer" onClick={() => setMenuOpen(false)}>Client login</a></div>
         </div>
       )}
