@@ -66,10 +66,8 @@ export default function Home() {
       </header>
 
       <section id="top" className="hero">
-        <div className="hero-art" aria-label="Reserved for Rosé Dopamine hero photography">
-          <div className="prism-orbit prism-orbit-one" /><div className="prism-orbit prism-orbit-two" />
-          <div className="hero-ring hero-ring-back" /><div className="hero-ring hero-ring-front" /><div className="hero-stone" />
-          <p className="image-note">CAMPAIGN IMAGE · MOBILE + DESKTOP</p>
+        <div className="hero-art">
+          <img src="/images/rose-hero-collection.jpg" alt="Rosé diamond rings arranged on ivory plinths" />
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
