@@ -222,14 +222,14 @@ footer { padding: 75px 5vw 24px; background: var(--paper); display: grid; grid-t
   .mobile-bag .ui-bag, .menu-bag .ui-bag { width: 23px; height: 23px; }
   .wordmark { font-size: 23px; }
   .hero { min-height: 100svh; background: var(--porcelain); }
-  .hero-art { inset: 0 0 auto; height: 56svh; }
-  .hero-art img { object-position: center 54%; }
-  .hero-shade { background: linear-gradient(0deg, var(--porcelain) 0 43%, oklch(98.2% .008 35 / .86) 49%, transparent 62%); }
-  .hero-copy { width: auto; padding: 0 20px 34px; }
+  .hero-art { inset: 0; height: 100%; }
+  .hero-art img { object-position: center center; }
+  .hero-shade { background: linear-gradient(180deg, oklch(98.2% .008 35 / .94) 0, oklch(98.2% .008 35 / .76) 24%, oklch(98.2% .008 35 / .22) 44%, transparent 58%), linear-gradient(0deg, oklch(98.2% .008 35 / .2), transparent 22%); }
+  .hero-copy { position: absolute; inset: 0 0 auto; width: auto; padding: 96px 20px 0; }
   .eyebrow { margin-bottom: 18px; font-size: 8px; line-height: 1.5; }
-  h1 { font-size: clamp(47px, 12.7vw, 58px); line-height: .94; margin-bottom: 20px; }
+  h1 { font-size: clamp(44px, 12vw, 54px); line-height: .94; margin-bottom: 18px; }
   .hero-description { font-size: 13px; max-width: 340px; }
-  .hero-actions { margin-top: 27px; gap: 20px; flex-wrap: wrap; }
+  .hero-actions { margin-top: 23px; gap: 18px; flex-wrap: wrap; }
   .button { min-height: 49px; padding: 0 18px; font-size: 8px; }
   .text-link { font-size: 8px; }
   .scroll-cue { display: none; }
