@@ -6,26 +6,27 @@ const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/
 const ArrowIcon = () => <img className="ui-arrow" src={assetPath("icons/arrow-up-right.svg")} alt="" aria-hidden="true" />;
 const RotateIcon = () => <img className="ui-rotate" src={assetPath("icons/rotate-cw.svg")} alt="" aria-hidden="true" />;
 const BagIcon = () => <img className="ui-bag" src={assetPath("icons/shopping-bag.svg")} alt="" aria-hidden="true" />;
+const MenuArrowIcon = () => <img className="menu-arrow" src={assetPath("icons/menu-arrow-right.svg")} alt="" aria-hidden="true" />;
 
 const categories = [
-  { title: "Rings", text: "Stack, mix, make it yours", image: assetPath("images/rose-hero.jpg") },
-  { title: "Necklaces", text: "A little light, close to you", image: assetPath("images/rose-necklace.jpg") },
-  { title: "Earrings", text: "For every angle", image: assetPath("images/rose-earrings.jpg") },
-  { title: "Bracelets", text: "Energy in motion", image: assetPath("images/rose-bracelet.jpg") },
+  { title: "Rings", text: "Stack, mix, make it yours", image: assetPath("images/rose-hero.webp") },
+  { title: "Necklaces", text: "A little light, close to you", image: assetPath("images/rose-necklace.webp") },
+  { title: "Earrings", text: "For every angle", image: assetPath("images/rose-earrings.webp") },
+  { title: "Bracelets", text: "Energy in motion", image: assetPath("images/rose-bracelet.webp") },
 ];
 
 const products = [
-  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.jpg"), tone: "rose" },
-  { name: "Azure Light Studs", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-earrings.jpg"), tone: "ice" },
-  { name: "Diamond Line Bracelet", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-bracelet.jpg"), tone: "silver" },
-  { name: "Barely There Pendant", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-necklace.jpg"), tone: "aqua" },
+  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.webp"), tone: "rose" },
+  { name: "Azure Light Studs", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-earrings.webp"), tone: "ice" },
+  { name: "Diamond Line Bracelet", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-bracelet.webp"), tone: "silver" },
+  { name: "Barely There Pendant", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-necklace.webp"), tone: "aqua" },
 ];
 
 const moods = [
-  { name: "Glow", label: "Warm light", copy: "Golden tones and soft brilliance for an effortless glow.", className: "mood-gold", image: assetPath("images/rose-hero.jpg") },
-  { name: "Rush", label: "Electric colour", copy: "Pink sapphires and vivid colour for main-character energy.", className: "mood-pink", image: assetPath("images/rose-dopamine.jpg") },
-  { name: "Crush", label: "Soft obsession", copy: "Clean diamonds and icy light with a romantic edge.", className: "mood-ice", image: assetPath("images/rose-earrings.jpg") },
-  { name: "After Dark", label: "Deep brilliance", copy: "Statement sparkle made for the city after sunset.", className: "mood-emerald", image: assetPath("images/rose-bracelet.jpg") },
+  { name: "Glow", label: "Warm light", copy: "Golden tones and soft brilliance for an effortless glow.", className: "mood-gold", image: assetPath("images/rose-hero.webp") },
+  { name: "Rush", label: "Electric colour", copy: "Pink sapphires and vivid colour for main-character energy.", className: "mood-pink", image: assetPath("images/rose-dopamine.webp") },
+  { name: "Crush", label: "Soft obsession", copy: "Clean diamonds and icy light with a romantic edge.", className: "mood-ice", image: assetPath("images/rose-earrings.webp") },
+  { name: "After Dark", label: "Deep brilliance", copy: "Statement sparkle made for the city after sunset.", className: "mood-emerald", image: assetPath("images/rose-bracelet.webp") },
 ];
 
 const designOptions = [
@@ -66,17 +67,26 @@ export default function Home() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const processEmbeds = () => (window as typeof window & { instgrm?: { Embeds?: { process?: () => void } } }).instgrm?.Embeds?.process?.();
-    const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.instagram.com/embed.js"]');
-    if (existing) {
-      processEmbeds();
-      return;
-    }
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://www.instagram.com/embed.js";
-    script.onload = processEmbeds;
-    document.body.appendChild(script);
+    const section = document.querySelector(".community");
+    if (!section) return;
+    const loadEmbeds = () => {
+      const processEmbeds = () => (window as typeof window & { instgrm?: { Embeds?: { process?: () => void } } }).instgrm?.Embeds?.process?.();
+      const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.instagram.com/embed.js"]');
+      if (existing) return processEmbeds();
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.instagram.com/embed.js";
+      script.onload = processEmbeds;
+      document.body.appendChild(script);
+    };
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        loadEmbeds();
+        observer.disconnect();
+      }
+    }, { rootMargin: "700px 0px" });
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -98,13 +108,13 @@ export default function Home() {
       <section id="top" className="hero">
         <div className="hero-art">
           <picture>
-            <source media="(max-width: 820px)" srcSet={assetPath("images/rose-hero-mobile.jpg")} />
-            <img src={assetPath("images/rose-hero-collection.jpg")} alt="Rosé diamond rings arranged on ivory plinths" fetchPriority="high" />
+            <source media="(max-width: 820px)" srcSet={assetPath("images/rose-hero-mobile.webp")} type="image/webp" />
+            <img src={assetPath("images/rose-hero-collection.webp")} alt="Rosé diamond rings arranged on ivory plinths" fetchPriority="high" decoding="async" />
           </picture>
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
-          <h1><em style={{ backgroundImage: `url("${assetPath("images/hero-diamond-texture-preview.jpg")}")` }}>Brilliance,</em><br />in every mood.</h1>
+          <h1><em style={{ backgroundImage: `url("${assetPath("images/hero-diamond-texture-preview.webp")}")` }}>Brilliance,</em><br />in every mood.</h1>
           <p className="hero-description">Natural and lab-grown diamonds in 18K gold, made for women who never blend in.</p>
           <div className="hero-actions">
             <a className="button button-light" href="#dopamine">Discover Rosé Dopamine</a>
@@ -126,7 +136,7 @@ export default function Home() {
         <div className="first-grid">
           {categories.map((category, index) => (
             <a className={`category-card category-${index + 1}`} href="#products" key={category.title}>
-              <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} /></div>
+              <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} loading="lazy" decoding="async" /></div>
               <div className="category-meta"><div><h3>{category.title}</h3><p>{category.text}</p></div><span className="round-arrow"><ArrowIcon /></span></div>
             </a>
           ))}
@@ -135,7 +145,7 @@ export default function Home() {
 
       <section id="dopamine" className="dopamine reveal">
         <div className="dopamine-visual">
-          <img src={assetPath("images/rose-dopamine.jpg")} alt="Colourful Rosé Dopamine rings worn on a hand" />
+          <img src={assetPath("images/rose-dopamine.webp")} alt="Colourful Rosé Dopamine rings worn on a hand" loading="lazy" decoding="async" />
         </div>
         <div className="dopamine-copy">
           <p className="eyebrow">New collection</p>
@@ -154,7 +164,7 @@ export default function Home() {
           {products.map((product) => (
             <article className="product-card" key={product.name}>
               <a className={`product-image product-${product.tone}`} href="#concierge">
-                <img src={product.image} alt={product.name} />
+                <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
                 <span className="product-hover">View piece <ArrowIcon /></span>
               </a>
               <div className="product-meta"><div><h3>{product.name}</h3><p>{product.detail}</p></div><a href="#concierge">Discover</a></div>
@@ -165,7 +175,7 @@ export default function Home() {
 
       <section className="stack-story reveal">
         <div className="stack-photo">
-          <img src={assetPath("images/shop-the-stack.jpg")} alt="A hand wearing a colourful stack of Rosé diamond rings" />
+          <img src={assetPath("images/shop-the-stack.webp")} alt="A hand wearing a colourful stack of Rosé diamond rings" loading="lazy" decoding="async" />
         </div>
         <div className="stack-copy">
           <p className="eyebrow">Shop the stack</p>
@@ -185,7 +195,7 @@ export default function Home() {
         <div className="mood-grid">
           {moods.map((mood) => (
             <a className={`mood-card ${mood.className}`} href="#products" key={mood.name}>
-              <img src={mood.image} alt={`${mood.name} jewellery edit`} />
+              <img src={mood.image} alt={`${mood.name} jewellery edit`} loading="lazy" decoding="async" />
               <span className="mood-wash" />
               <span className="mood-card-copy"><small>{mood.label}</small><b>{mood.name}</b><em>{mood.copy}</em><i>Shop this mood <ArrowIcon /></i></span>
             </a>
@@ -196,7 +206,7 @@ export default function Home() {
       <section className="design-piece section reveal">
         <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><div className="render-requirement"><RotateIcon /><span><b>Interactive 360° preview</b><small>The final experience uses a dedicated GLB product model—not a simulated CSS ring.</small></span></div><a className="button button-ink" href="#concierge">Start designing <ArrowIcon /></a></div>
         <div className="design-studio">
-          <div className="design-preview"><img src={assetPath("images/rose-hero.jpg")} alt="Pink oval diamond ring preview" /><span><RotateIcon /> 360° MODEL AREA</span></div>
+          <div className="design-preview"><img src={assetPath("images/rose-hero.webp")} alt="Pink oval diamond ring preview" loading="lazy" decoding="async" /><span><RotateIcon /> 360° MODEL AREA</span></div>
           <div className="design-controls">
             {designOptions.map(({ label, value, icon }, index) => <button key={label}><i className="line-icon" aria-hidden="true">{icon}</i><small>0{index + 1}</small><b>{label}</b><span>{value}</span></button>)}
           </div>
@@ -212,8 +222,8 @@ export default function Home() {
 
       <section id="concierge" className="concierge reveal">
         <picture className="concierge-media">
-          <source media="(max-width: 700px)" srcSet={assetPath("images/private-concierge-mobile.jpg")} />
-          <img src={assetPath("images/private-concierge-desktop.jpg")} alt="A private diamond ring consultation" />
+          <source media="(max-width: 700px)" srcSet={assetPath("images/private-concierge-mobile.webp")} type="image/webp" />
+          <img src={assetPath("images/private-concierge-desktop.webp")} alt="A private diamond ring consultation" loading="lazy" decoding="async" />
         </picture>
         <div className="concierge-content">
           <p className="eyebrow">Private concierge</p><h2>Need a little<br />help choosing?</h2><p>Talk to a Rosé specialist about stones, sizing, styling or a piece made entirely for you.</p>
@@ -231,7 +241,7 @@ export default function Home() {
       {menuOpen && (
         <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Main menu">
           <div className="menu-top"><button className="menu-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button><span className="wordmark menu-wordmark">ROSÉ<small>DIAMONDS</small></span><button className="menu-bag" aria-label="Shopping bag"><BagIcon /></button></div>
-          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><span>{item}</span></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.jpg")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
+          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><span>{item}</span><MenuArrowIcon /></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.webp")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
           <div className="menu-service"><a href="#concierge" onClick={() => setMenuOpen(false)}>Private concierge</a><a href="#footer" onClick={() => setMenuOpen(false)}>Delivery &amp; returns</a><a href="#footer" onClick={() => setMenuOpen(false)}>Language / Region</a><a href="#footer" onClick={() => setMenuOpen(false)}>Client login</a></div>
         </div>
       )}

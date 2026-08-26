@@ -24,7 +24,8 @@ button { border: 0; background: none; cursor: pointer; }
 .line-icon { display: inline-grid; place-items: center; font-family: var(--display); font-style: normal; font-weight: 400; line-height: 1; }
 .ui-arrow { width: 13px; height: 13px; display: inline-block; flex: 0 0 auto; opacity: .78; }
 .ui-rotate { width: 20px; height: 20px; display: block; flex: 0 0 auto; opacity: .8; }
-.ui-bag { width: 21px; height: 21px; display: block; }
+.ui-bag { width: 22px; height: 22px; display: block; }
+.menu-arrow { width: 17px; height: 17px; flex: 0 0 auto; opacity: .66; transition: transform .3s ease, opacity .3s ease; }
 
 .site-header {
   position: fixed; z-index: 50; inset: 0 0 auto; height: 76px; display: grid;
@@ -187,7 +188,8 @@ footer { padding: 75px 5vw 24px; background: var(--paper); display: grid; grid-t
 .menu-bag { width: 34px; height: 34px; display: grid; place-items: center; }
 .menu-body { display: grid; grid-template-columns: 1.15fr .85fr; min-height: 0; }
 .menu-links { padding: 4vh 6vw; display: flex; flex-direction: column; justify-content: center; }
-.menu-links a { display: block; border-bottom: 1px solid oklch(88% .012 30); padding: 1.9vh 0; }
+.menu-links a { display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid oklch(88% .012 30); padding: 1.9vh 0; }
+.menu-links a:hover .menu-arrow { transform: translateX(4px); opacity: 1; }
 .menu-links span { font-family: var(--display); font-size: clamp(28px, 2.8vw, 46px); line-height: 1; }
 .menu-campaign { position: relative; isolation: isolate; margin: 28px 38px 28px 0; color: white; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; background-color: var(--rose); background-position: center 42%; background-size: cover; background-repeat: no-repeat; }
 .menu-campaign::after { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(0deg, oklch(13% .055 340 / .76), transparent 68%); }
@@ -217,6 +219,7 @@ footer { padding: 75px 5vw 24px; background: var(--paper); display: grid; grid-t
   .icon-button { width: 30px; height: 30px; justify-self: start; padding: 7px 4px; }
   .icon-button span { display: block; height: 1px; width: 20px; background: currentColor; margin: 3.5px 0; }
   .mobile-bag { width: 34px; height: 34px; justify-self: end; display: grid; place-items: center; }
+  .mobile-bag .ui-bag, .menu-bag .ui-bag { width: 23px; height: 23px; }
   .wordmark { font-size: 23px; }
   .hero { min-height: 100svh; background: var(--porcelain); }
   .hero-art { inset: 0 0 auto; height: 56svh; }
@@ -291,8 +294,9 @@ footer { padding: 75px 5vw 24px; background: var(--paper); display: grid; grid-t
   .menu-top { padding: 0 18px; }
   .menu-body { display: block; overflow-y: auto; }
   .menu-links { padding: 25px 20px 35px; }
-  .menu-links a { padding: 14px 0; }
-  .menu-links span { font-size: 26px; }
+  .menu-links a { padding: 13px 0; }
+  .menu-links span { font-size: 23px; letter-spacing: -.015em; }
+  .menu-links .menu-arrow { width: 15px; height: 15px; }
   .menu-campaign { margin: 0 20px 25px; min-height: 260px; padding: 26px; background-position: center 48%; }
   .menu-campaign h3 { font-size: 55px; }
   .menu-service { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 14px 20px; }
