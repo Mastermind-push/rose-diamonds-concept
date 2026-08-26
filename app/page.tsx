@@ -2,31 +2,44 @@
 
 import { useEffect, useState } from "react";
 
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+
 const categories = [
-  { number: "01", title: "Rings", text: "Stack, mix, make it yours", image: "/images/rose-hero.jpg" },
-  { number: "02", title: "Necklaces", text: "A little light, close to you", image: "/images/rose-necklace.jpg" },
-  { number: "03", title: "Earrings", text: "For every angle", image: "/images/rose-earrings.jpg" },
-  { number: "04", title: "Bracelets", text: "Energy in motion", image: "/images/rose-bracelet.jpg" },
+  { title: "Rings", text: "Stack, mix, make it yours", image: assetPath("images/rose-hero.jpg") },
+  { title: "Necklaces", text: "A little light, close to you", image: assetPath("images/rose-necklace.jpg") },
+  { title: "Earrings", text: "For every angle", image: assetPath("images/rose-earrings.jpg") },
+  { title: "Bracelets", text: "Energy in motion", image: assetPath("images/rose-bracelet.jpg") },
 ];
 
 const products = [
-  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: "/images/rose-hero.jpg", tone: "rose" },
-  { name: "Azure Light Studs", detail: "18K white gold · Lab-grown", image: "/images/rose-earrings.jpg", tone: "ice" },
-  { name: "Diamond Line Bracelet", detail: "18K white gold · Lab-grown", image: "/images/rose-bracelet.jpg", tone: "silver" },
-  { name: "Barely There Pendant", detail: "18K white gold · Lab-grown", image: "/images/rose-necklace.jpg", tone: "aqua" },
+  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.jpg"), tone: "rose" },
+  { name: "Azure Light Studs", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-earrings.jpg"), tone: "ice" },
+  { name: "Diamond Line Bracelet", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-bracelet.jpg"), tone: "silver" },
+  { name: "Barely There Pendant", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-necklace.jpg"), tone: "aqua" },
 ];
 
 const moods = [
-  { name: "Glow", label: "Warm light", className: "mood-gold" },
-  { name: "Rush", label: "Electric colour", className: "mood-pink" },
-  { name: "Crush", label: "Soft obsession", className: "mood-ice" },
-  { name: "After Dark", label: "Deep brilliance", className: "mood-emerald" },
+  { name: "Glow", label: "Warm light", copy: "Golden tones and soft brilliance for an effortless glow.", className: "mood-gold", image: assetPath("images/rose-hero.jpg") },
+  { name: "Rush", label: "Electric colour", copy: "Pink sapphires and vivid colour for main-character energy.", className: "mood-pink", image: assetPath("images/rose-dopamine.jpg") },
+  { name: "Crush", label: "Soft obsession", copy: "Clean diamonds and icy light with a romantic edge.", className: "mood-ice", image: assetPath("images/rose-earrings.jpg") },
+  { name: "After Dark", label: "Deep brilliance", copy: "Statement sparkle made for the city after sunset.", className: "mood-emerald", image: assetPath("images/rose-bracelet.jpg") },
+];
+
+const designOptions = [
+  { label: "Stone", value: "Oval", icon: "◇" },
+  { label: "Colour", value: "Blush pink", icon: "◉" },
+  { label: "Setting", value: "Solitaire", icon: "✦" },
+];
+
+const instagramPosts = [
+  "https://www.instagram.com/p/DbL5Ph9COzg/",
+  "https://www.instagram.com/p/DcTpspGCOQB/",
+  "https://www.instagram.com/p/DaxFCn9CGm_/",
 ];
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeMood, setActiveMood] = useState(1);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,6 +62,20 @@ export default function Home() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const processEmbeds = () => (window as typeof window & { instgrm?: { Embeds?: { process?: () => void } } }).instgrm?.Embeds?.process?.();
+    const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.instagram.com/embed.js"]');
+    if (existing) {
+      processEmbeds();
+      return;
+    }
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.instagram.com/embed.js";
+    script.onload = processEmbeds;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <main>
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
@@ -56,7 +83,7 @@ export default function Home() {
           <span /><span />
         </button>
         <nav className="desktop-nav desktop-nav-left" aria-label="Primary">
-          <a href="#collections">Collections</a><a href="#dopamine">New</a><a href="#story">World of Rosé</a>
+          <a href="#collections">Collections</a><a href="#dopamine">New</a><a href="#moods">Shop by mood</a>
         </nav>
         <a className="wordmark" href="#top" aria-label="Rosé Diamonds home">ROSÉ<small>DIAMONDS</small></a>
         <nav className="desktop-nav desktop-nav-right" aria-label="Services">
@@ -67,12 +94,14 @@ export default function Home() {
 
       <section id="top" className="hero">
         <div className="hero-art">
-          <img src="/images/rose-hero-collection.jpg" alt="Rosé diamond rings arranged on ivory plinths" />
+          <picture>
+            <source media="(max-width: 820px)" srcSet={assetPath("images/rose-hero-mobile.jpg")} />
+            <img src={assetPath("images/rose-hero-collection.jpg")} alt="Rosé diamond rings arranged on ivory plinths" fetchPriority="high" />
+          </picture>
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
-          <p className="eyebrow">Born in Hong Kong · Fine diamonds &amp; colour</p>
-          <h1>Brilliance,<br /><em>in every mood.</em></h1>
+          <h1><em style={{ backgroundImage: `url("${assetPath("images/hero-diamond-texture-preview.jpg")}")` }}>Brilliance,</em><br />in every mood.</h1>
           <p className="hero-description">Natural and lab-grown diamonds in 18K gold, made for women who never blend in.</p>
           <div className="hero-actions">
             <a className="button button-light" href="#dopamine">Discover Rosé Dopamine</a>
@@ -94,7 +123,7 @@ export default function Home() {
         <div className="first-grid">
           {categories.map((category, index) => (
             <a className={`category-card category-${index + 1}`} href="#products" key={category.title}>
-              <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} /><span>{category.number}</span></div>
+              <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} /></div>
               <div className="category-meta"><div><h3>{category.title}</h3><p>{category.text}</p></div><span className="round-arrow">↗</span></div>
             </a>
           ))}
@@ -103,15 +132,13 @@ export default function Home() {
 
       <section id="dopamine" className="dopamine reveal">
         <div className="dopamine-visual">
-          <img src="/images/rose-dopamine.jpg" alt="Colourful Rosé Dopamine rings worn on a hand" />
-          <span className="asset-tag">CURRENT ASSET · FUTURE CAMPAIGN CROP</span>
+          <img src={assetPath("images/rose-dopamine.jpg")} alt="Colourful Rosé Dopamine rings worn on a hand" />
         </div>
         <div className="dopamine-copy">
-          <p className="eyebrow">New collection · 18K gold</p>
+          <p className="eyebrow">New collection</p>
           <h2>Diamonds<br /><span className="diamond-text diamond-pink">with a pulse.</span></h2>
           <p>Lab-grown diamonds and coloured sapphires, arranged like tiny hits of energy. Precious, vivid and designed to stack your own way.</p>
           <a className="button button-ink" href="#products">Enter Rosé Dopamine <span>↗</span></a>
-          <div className="dopamine-dots"><span /><span /><span /><span /><span /></div>
         </div>
       </section>
 
@@ -121,11 +148,10 @@ export default function Home() {
           <a className="text-link text-link-dark" href="#collections">Shop all jewellery <span>↗</span></a>
         </div>
         <div className="product-rail">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <article className="product-card" key={product.name}>
               <a className={`product-image product-${product.tone}`} href="#concierge">
                 <img src={product.image} alt={product.name} />
-                <span className="product-index">0{index + 1}</span><button className="heart" aria-label={`Save ${product.name}`}>♡</button>
                 <span className="product-hover">View piece ↗</span>
               </a>
               <div className="product-meta"><div><h3>{product.name}</h3><p>{product.detail}</p></div><a href="#concierge">Discover</a></div>
@@ -136,80 +162,74 @@ export default function Home() {
 
       <section className="stack-story reveal">
         <div className="stack-photo">
-          <div className="placeholder-noise" />
-          <span className="photo-brief">NEW PHOTO · YOUNG EDITORIAL PORTRAIT · 4:5</span>
-          <button className="hotspot hotspot-one" aria-label="View pink ring">1</button>
-          <button className="hotspot hotspot-two" aria-label="View blue ring">2</button>
-          <button className="hotspot hotspot-three" aria-label="View yellow ring">3</button>
+          <img src={assetPath("images/shop-the-stack.jpg")} alt="A hand wearing a colourful stack of Rosé diamond rings" />
+          <div className="stack-image-caption"><img src={assetPath("icons/stack-layers.svg")} alt="" aria-hidden="true" /><span>One stack.<br />Your colour story.</span></div>
         </div>
         <div className="stack-copy">
           <p className="eyebrow">Shop the stack</p>
-          <h2>More you.<br />Never too much.</h2>
-          <p>Start with one colour. Add another because it feels right. There are no rules—only your rhythm.</p>
-          <div className="mini-product"><span className="mini-stone" /><div><small>STACK 01</small><h3>The Dopamine Trio</h3><p>Three rings · 18K gold</p></div><a href="#concierge">↗</a></div>
-          <a className="button button-outline" href="#products">Build your stack</a>
+          <h2>Build a stack<br />that feels like you.</h2>
+          <p>Choose one hero stone, add a line of colour, then mix shapes or metals. Shop the complete edit or use it as a starting point.</p>
+          <div className="stack-formula" aria-label="How to build a ring stack">
+            <span><img className="stack-step-icon" src={assetPath("icons/stack-gem.svg")} alt="" aria-hidden="true" /><b>Choose a hero</b><em>Start with your favourite stone</em></span>
+            <span><img className="stack-step-icon" src={assetPath("icons/stack-palette.svg")} alt="" aria-hidden="true" /><b>Add colour</b><em>Match it or make it clash</em></span>
+            <span><img className="stack-step-icon" src={assetPath("icons/stack-layers.svg")} alt="" aria-hidden="true" /><b>Make it yours</b><em>Stack two, three or more</em></span>
+          </div>
+          <div className="stack-actions"><a className="button button-light" href="#products">Shop the complete stack</a><a className="text-link" href="#concierge">Ask a stylist <span>↗</span></a></div>
         </div>
       </section>
 
-      <section className={`mood-section ${moods[activeMood].className} reveal`}>
-        <div className="mood-intro"><p className="eyebrow">Shop by mood</p><h2>Pick your<br /><span className="diamond-text diamond-mood">energy.</span></h2><p>Jewellery is not the finishing touch. It is the mood you choose to carry.</p></div>
-        <div className="mood-list">
-          {moods.map((mood, index) => (
-            <button className={index === activeMood ? "active" : ""} onMouseEnter={() => setActiveMood(index)} onFocus={() => setActiveMood(index)} onClick={() => setActiveMood(index)} key={mood.name}>
-              <small>0{index + 1}</small><span>{mood.name}</span><em>{mood.label}</em><b>↗</b>
-            </button>
+      <section id="moods" className="mood-section reveal">
+        <div className="mood-intro"><div><p className="eyebrow eyebrow-dark">Shop by mood</p><h2>Choose the energy<br /><span className="diamond-text diamond-mood">you want to wear.</span></h2></div><p>Four curated edits built around colour, light and attitude. Pick the feeling first—we will show you the pieces.</p></div>
+        <div className="mood-grid">
+          {moods.map((mood) => (
+            <a className={`mood-card ${mood.className}`} href="#products" key={mood.name}>
+              <img src={mood.image} alt={`${mood.name} jewellery edit`} />
+              <span className="mood-wash" />
+              <span className="mood-card-copy"><small>{mood.label}</small><b>{mood.name}</b><em>{mood.copy}</em><i>Shop this mood ↗</i></span>
+            </a>
           ))}
         </div>
       </section>
 
       <section className="design-piece section reveal">
-        <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><a className="button button-ink" href="#concierge">Start designing ↗</a></div>
+        <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><div className="render-requirement"><i className="line-icon" aria-hidden="true">↻</i><span><b>Interactive 360° preview</b><small>The final experience uses a dedicated GLB product model—not a simulated CSS ring.</small></span></div><a className="button button-ink" href="#concierge">Start designing ↗</a></div>
         <div className="design-studio">
-          <span className="studio-label">INTERACTIVE 3D / PRODUCT PHOTOGRAPHY PLACEHOLDER</span>
-          <div className="design-ring"><span /></div>
+          <div className="design-preview"><img src={assetPath("images/rose-hero.jpg")} alt="Pink oval diamond ring preview" /><span><i className="line-icon" aria-hidden="true">↻</i> 360° MODEL AREA</span></div>
           <div className="design-controls">
-            {["Stone", "Colour", "Setting"].map((item, index) => <button key={item}><small>0{index + 1}</small>{item}<span>{index === 0 ? "Oval" : index === 1 ? "Pink" : "Solitaire"}</span></button>)}
+            {designOptions.map(({ label, value, icon }, index) => <button key={label}><i className="line-icon" aria-hidden="true">{icon}</i><small>0{index + 1}</small><b>{label}</b><span>{value}</span></button>)}
           </div>
-        </div>
-      </section>
-
-      <section id="story" className="story reveal">
-        <div className="story-image"><span>NEW PHOTO · HONG KONG AFTER DARK · 16:10</span></div>
-        <div className="story-copy"><p className="eyebrow">Our origin</p><h2>Born in<br /><span className="diamond-text diamond-gold">Hong Kong.</span></h2><p>A city of light, movement and fearless contrasts. Rosé was created here for women everywhere who believe fine jewellery should feel alive.</p><div className="story-facts"><span><b>18K</b> Gold craftsmanship</span><span><b>GIA / IGI</b> Certified stones</span><span><b>Global</b> Worldwide delivery</span></div><a className="text-link" href="#footer">The world of Rosé <span>↗</span></a></div>
-      </section>
-
-      <section className="section confidence reveal">
-        <div className="confidence-title"><p className="eyebrow eyebrow-dark">Beautifully transparent</p><h2>Confidence<br />in every detail.</h2></div>
-        <div className="confidence-grid">
-          <article><small>01</small><h3>Natural diamonds</h3><p>Ethically sourced and GIA certified for life’s most precious moments.</p><a href="#concierge">Learn more ↗</a></article>
-          <article><small>02</small><h3>Lab-grown brilliance</h3><p>IGI certified diamonds with exceptional light, crafted for every day.</p><a href="#concierge">Learn more ↗</a></article>
-          <article><small>03</small><h3>Made to last</h3><p>Every Rosé piece is crafted in 18K gold and delivered with personal care.</p><a href="#concierge">Our services ↗</a></article>
         </div>
       </section>
 
       <section className="community reveal">
         <div className="community-heading"><p className="eyebrow">Rosé in the wild</p><h2>Worn your way.</h2><p>Real women, real stacks, real energy.</p></div>
         <div className="community-grid">
-          {["CLIENT UGC · 4:5", "LIFESTYLE VIDEO · 9:16", "CLIENT UGC · 4:5"].map((label, index) => <article key={label + index}><div className={`ugc-placeholder ugc-${index + 1}`}><span>{label}</span></div><div><p>“It feels completely like me.”</p><small>@roségirl · Verified client</small></div></article>)}
+          {instagramPosts.map((post) => <article className="instagram-card" key={post}><blockquote className="instagram-media" data-instgrm-permalink={`${post}?utm_source=ig_embed&utm_campaign=loading`} data-instgrm-version="14"><a href={post} target="_blank" rel="noreferrer">View this post on Instagram</a></blockquote></article>)}
         </div>
       </section>
 
       <section id="concierge" className="concierge reveal">
-        <p className="eyebrow">Private concierge</p><h2>Need a little<br /><span className="diamond-text diamond-ice">help choosing?</span></h2><p>Talk to a Rosé specialist about stones, sizing, styling or a piece made entirely for you.</p>
-        <div className="concierge-actions"><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="text-link" href="https://wa.me/85292270884">Chat on WhatsApp ↗</a></div>
+        <picture className="concierge-media">
+          <source media="(max-width: 700px)" srcSet={assetPath("images/private-concierge-mobile.jpg")} />
+          <img src={assetPath("images/private-concierge-desktop.jpg")} alt="A private diamond ring consultation" />
+        </picture>
+        <div className="concierge-content">
+          <p className="eyebrow">Private concierge</p><h2>Need a little<br />help choosing?</h2><p>Talk to a Rosé specialist about stones, sizing, styling or a piece made entirely for you.</p>
+          <div className="concierge-actions"><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="text-link" href="https://wa.me/85292270884">Chat on WhatsApp ↗</a></div>
+        </div>
       </section>
 
       <footer id="footer">
         <div className="footer-brand"><span className="wordmark">ROSÉ<small>DIAMONDS</small></span><p>Brilliance, in every mood.</p></div>
-        <div className="footer-links"><div><small>JEWELLERY</small><a href="#collections">Rings</a><a href="#collections">Necklaces</a><a href="#collections">Earrings</a><a href="#collections">Bracelets</a></div><div><small>THE HOUSE</small><a href="#story">Our story</a><a href="#dopamine">Rosé Dopamine</a><a href="#concierge">Design your piece</a><a href="#concierge">Concierge</a></div><div><small>CLIENT CARE</small><a href="#footer">Delivery &amp; returns</a><a href="#footer">Size guide</a><a href="#footer">Jewellery care</a><a href="#footer">Contact</a></div></div>
+        <div className="footer-links"><div><small>JEWELLERY</small><a href="#collections">Rings</a><a href="#collections">Necklaces</a><a href="#collections">Earrings</a><a href="#collections">Bracelets</a></div><div><small>THE HOUSE</small><a href="#dopamine">Rosé Dopamine</a><a href="#moods">Shop by mood</a><a href="#concierge">Design your piece</a><a href="#concierge">Concierge</a></div><div><small>CLIENT CARE</small><a href="#footer">Delivery &amp; returns</a><a href="#footer">Size guide</a><a href="#footer">Jewellery care</a><a href="#footer">Contact</a></div></div>
         <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form><label className="sr-only" htmlFor="email">Email address</label><input id="email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe">↗</button></form></div>
-        <div className="footer-bottom"><span>© 2026 Rosé Diamonds Ltd.</span><span>Hong Kong · Worldwide delivery</span><span>Instagram · TikTok</span></div>
+        <div className="footer-bottom"><span>© 2026 Rosé Diamonds Ltd.</span><span>Hong Kong · Worldwide delivery</span><div className="footer-socials"><a href="#footer" aria-label="Instagram"><img src={assetPath("icons/instagram.svg")} alt="" /></a><a href="#footer" aria-label="TikTok"><img src={assetPath("icons/tiktok.svg")} alt="" /></a><a href="#footer" aria-label="Pinterest"><img src={assetPath("icons/pinterest.svg")} alt="" /></a></div></div>
       </footer>
 
       {menuOpen && (
         <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Main menu">
           <div className="menu-top"><button className="menu-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button><span className="wordmark menu-wordmark">ROSÉ<small>DIAMONDS</small></span><span className="menu-count">Bag <sup>0</sup></span></div>
-          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "The world of Rosé"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#story" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><small>0{i + 1}</small><span>{item}</span><b>↗</b></a>)}</nav><div className="menu-campaign"><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3><p>Campaign image placeholder</p></div></div>
+          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><small>0{i + 1}</small><span>{item}</span><b>↗</b></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.jpg")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
           <div className="menu-service"><a href="#concierge" onClick={() => setMenuOpen(false)}>Private concierge</a><a href="#footer" onClick={() => setMenuOpen(false)}>Delivery &amp; returns</a><a href="#footer" onClick={() => setMenuOpen(false)}>Language / Region</a><a href="#footer" onClick={() => setMenuOpen(false)}>Client login</a></div>
         </div>
       )}
