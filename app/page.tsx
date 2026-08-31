@@ -1,248 +1,234 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import SiteFooter from "@/components/site-footer";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+
 const ArrowIcon = () => <img className="ui-arrow" src={assetPath("icons/arrow-up-right.svg")} alt="" aria-hidden="true" />;
-const RotateIcon = () => <img className="ui-rotate" src={assetPath("icons/rotate-cw.svg")} alt="" aria-hidden="true" />;
 const BagIcon = () => <img className="ui-bag" src={assetPath("icons/shopping-bag.svg")} alt="" aria-hidden="true" />;
 const MenuArrowIcon = () => <img className="menu-arrow" src={assetPath("icons/menu-arrow-right.svg")} alt="" aria-hidden="true" />;
 
-const categories = [
-  { title: "Rings", text: "Stack, mix, make it yours", image: assetPath("images/rose-hero.webp") },
-  { title: "Necklaces", text: "A little light, close to you", image: assetPath("images/rose-necklace.webp") },
-  { title: "Earrings", text: "For every angle", image: assetPath("images/rose-earrings.webp") },
-  { title: "Bracelets", text: "Energy in motion", image: assetPath("images/rose-bracelet.webp") },
-];
+function BrandLogo({ inverse = false }: { inverse?: boolean }) {
+  return <span className={`brand-logo${inverse ? " is-inverse" : ""}`} aria-hidden="true"><img src={assetPath("images/rose-wordmark-transparent.webp")} alt="" /></span>;
+}
+
+type Panel = "shop" | "world" | "search" | "bag" | "account" | "mobile" | null;
 
 const products = [
-  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.webp"), tone: "rose" },
-  { name: "Azure Light Studs", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-earrings.webp"), tone: "ice" },
-  { name: "Diamond Line Bracelet", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-bracelet.webp"), tone: "silver" },
-  { name: "Barely There Pendant", detail: "18K white gold · Lab-grown", image: assetPath("images/rose-necklace.webp"), tone: "aqua" },
+  { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.webp") },
+  { name: "Diamond Line Bracelet", detail: "18K white gold · Diamonds", image: assetPath("images/rose-bracelet.webp") },
+  { name: "Azure Light Studs", detail: "18K white gold · Diamonds", image: assetPath("images/rose-earrings.webp") },
+  { name: "Barely There Pendant", detail: "18K white gold · Diamond", image: assetPath("images/rose-necklace.webp") },
 ];
 
-const moods = [
-  { name: "Glow", label: "Warm light", copy: "Golden tones and soft brilliance for an effortless glow.", className: "mood-gold", image: assetPath("images/rose-hero.webp") },
-  { name: "Rush", label: "Electric colour", copy: "Pink sapphires and vivid colour for main-character energy.", className: "mood-pink", image: assetPath("images/rose-dopamine.webp") },
-  { name: "Crush", label: "Soft obsession", copy: "Clean diamonds and icy light with a romantic edge.", className: "mood-ice", image: assetPath("images/rose-earrings.webp") },
-  { name: "After Dark", label: "Deep brilliance", copy: "Statement sparkle made for the city after sunset.", className: "mood-emerald", image: assetPath("images/rose-bracelet.webp") },
+const searchable = [
+  { label: "Most Wanted", target: "#most-wanted" },
+  { label: "All Jewellery", target: "/collections/all-jewellery" },
+  { label: "ROSÉ Dopamine", target: "/collections/rose-dopamine" },
+  { label: "Rings", target: "/collections/rings" },
+  { label: "Necklaces", target: "/collections/necklaces" },
+  { label: "Earrings", target: "/collections/earrings" },
+  { label: "Bracelets", target: "/collections/bracelets" },
+  { label: "Design Your Piece", target: "#design-your-piece" },
+  { label: "Concierge", target: "#concierge" },
 ];
 
-const designOptions = [
-  { label: "Stone", value: "Oval", icon: "◇" },
-  { label: "Colour", value: "Blush pink", icon: "◉" },
-  { label: "Setting", value: "Solitaire", icon: "✦" },
-];
-
-const instagramPosts = [
-  "https://www.instagram.com/p/DbL5Ph9COzg/",
-  "https://www.instagram.com/p/DcTpspGCOQB/",
-  "https://www.instagram.com/p/DaxFCn9CGm_/",
-];
+function Placeholder({ label, ratio, className = "" }: { label: string; ratio: string; className?: string }) {
+  return <div className={`image-placeholder ${className}`}><span>{label}</span><small>{ratio}</small></div>;
+}
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState<Panel>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return searchable.slice(0, 5);
+    return searchable.filter((item) => item.label.toLowerCase().includes(query));
+  }, [searchQuery]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")),
-      { threshold: 0.12 },
-    );
-    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  useEffect(() => {
+    document.body.style.overflow = activePanel ? "hidden" : "";
+    const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && setActivePanel(null);
+    window.addEventListener("keydown", closeOnEscape);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      observer.disconnect();
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
     };
-  }, []);
+  }, [activePanel]);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
-
-  useEffect(() => {
-    const section = document.querySelector(".community");
-    if (!section) return;
-    const loadEmbeds = () => {
-      const processEmbeds = () => (window as typeof window & { instgrm?: { Embeds?: { process?: () => void } } }).instgrm?.Embeds?.process?.();
-      const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.instagram.com/embed.js"]');
-      if (existing) return processEmbeds();
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = "https://www.instagram.com/embed.js";
-      script.onload = processEmbeds;
-      document.body.appendChild(script);
-    };
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        loadEmbeds();
-        observer.disconnect();
-      }
-    }, { rootMargin: "700px 0px" });
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
+  const closePanel = () => setActivePanel(null);
 
   return (
     <main>
-      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
-        <button className="icon-button menu-trigger" aria-label="Open menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}>
+      <header className={`site-header hero-header ${scrolled ? "is-scrolled" : ""}`}>
+        <button className="mobile-menu-trigger" aria-label="Open menu" aria-expanded={activePanel === "mobile"} onClick={() => setActivePanel("mobile")}>
           <span /><span /><span />
         </button>
-        <nav className="desktop-nav desktop-nav-left" aria-label="Primary">
-          <a href="#collections">Collections</a><a href="#dopamine">New</a><a href="#moods">Shop by mood</a>
+
+        <nav className="desktop-nav desktop-nav-left" aria-label="Primary navigation">
+          <button onClick={() => setActivePanel(activePanel === "shop" ? null : "shop")} aria-expanded={activePanel === "shop"}>Shop</button>
+          <button onClick={() => setActivePanel(activePanel === "world" ? null : "world")} aria-expanded={activePanel === "world"}>Our World</button>
+          <button onClick={() => setActivePanel("search")}>Search</button>
         </nav>
-        <a className="wordmark" href="#top" aria-label="Rosé Diamonds home">ROSÉ<small>DIAMONDS</small></a>
-        <nav className="desktop-nav desktop-nav-right" aria-label="Services">
-          <a href="#concierge">Concierge</a><button aria-label="Search">Search</button><button aria-label="Shopping bag">Bag <sup>0</sup></button>
+
+        <a className="wordmark" href="#top" aria-label="ROSÉ Diamonds home"><BrandLogo inverse={!scrolled} /></a>
+
+        <nav className="desktop-nav desktop-nav-right" aria-label="Client navigation">
+          <a href="#concierge">Concierge</a>
+          <button onClick={() => setActivePanel("account")}>My Account</button>
+          <button onClick={() => setActivePanel("bag")} aria-label="Shopping bag">Bag <sup>0</sup></button>
         </nav>
-        <button className="mobile-bag" aria-label="Shopping bag"><BagIcon /></button>
+
+        <button className="mobile-bag" aria-label="Shopping bag" onClick={() => setActivePanel("bag")}><BagIcon /><sup>0</sup></button>
       </header>
 
-      <section id="top" className="hero">
-        <div className="hero-art">
-          <picture>
-            <source media="(max-width: 820px)" srcSet={assetPath("images/rose-hero-mobile.webp")} type="image/webp" />
-            <img src={assetPath("images/rose-hero-collection.webp")} alt="Rosé diamond rings arranged on ivory plinths" fetchPriority="high" decoding="async" />
-          </picture>
-        </div>
-        <div className="hero-shade" />
+      <section id="top" className="hero hero-editorial">
+        <picture className="hero-media">
+          <img src={assetPath("images/rose-hero-editorial.avif")} alt="A woman wearing diamond jewellery against deep teal and burgundy velvet" fetchPriority="high" decoding="async" />
+        </picture>
+        <div className="hero-overlay" />
         <div className="hero-copy">
-          <h1><em style={{ backgroundImage: `url("${assetPath("images/hero-diamond-texture-preview.webp")}")` }}>Brilliance,</em><br />in every mood.</h1>
-          <p className="hero-description">Natural and lab-grown diamonds in 18K gold, made for women who never blend in.</p>
-          <div className="hero-actions">
-            <a className="button button-light" href="#dopamine">Discover Rosé Dopamine</a>
-            <a className="text-link" href="#products">Shop rings <ArrowIcon /></a>
-          </div>
-        </div>
-        <a className="scroll-cue" href="#collections"><span /> Discover</a>
-      </section>
-
-      <div className="trust-ribbon" aria-label="Product assurances">
-        <span>GIA-certified natural diamonds</span><i>✦</i><span>IGI-certified lab-grown</span><i>✦</i><span>18K gold</span><i>✦</i><span>Worldwide delivery</span>
-      </div>
-
-      <section id="collections" className="section collection-preview reveal">
-        <div className="section-heading">
-          <p className="eyebrow eyebrow-dark">The Rosé edit</p>
-          <h2>Find your<br /><span className="diamond-text diamond-ice">kind of brilliance.</span></h2>
-        </div>
-        <div className="first-grid">
-          {categories.map((category, index) => (
-            <a className={`category-card category-${index + 1}`} href="#products" key={category.title}>
-              <div className="category-image"><img src={category.image} alt={`${category.title} by Rosé Diamonds`} loading="lazy" decoding="async" /></div>
-              <div className="category-meta"><div><h3>{category.title}</h3><p>{category.text}</p></div><span className="round-arrow"><ArrowIcon /></span></div>
-            </a>
-          ))}
+          <h1>Brilliance, in every <em>mood.</em></h1>
+          <a className="button button-outline-light" href="/collections/all-jewellery">Explore jewellery</a>
         </div>
       </section>
 
-      <section id="dopamine" className="dopamine reveal">
-        <div className="dopamine-visual">
-          <img src={assetPath("images/rose-dopamine.webp")} alt="Colourful Rosé Dopamine rings worn on a hand" loading="lazy" decoding="async" />
+      <section id="most-wanted" className="section most-wanted">
+        <div className="section-intro row-intro">
+          <div><p className="micro-label">The ROSÉ edit</p><h2>Most Wanted</h2></div>
+          <a className="underlined-link" href="/collections/all-jewellery">View all jewellery <ArrowIcon /></a>
         </div>
-        <div className="dopamine-copy">
-          <p className="eyebrow">New collection</p>
-          <h2>Diamonds<br /><span className="diamond-text diamond-pink">with a pulse.</span></h2>
-          <p>Lab-grown diamonds and coloured sapphires, arranged like tiny hits of energy. Precious, vivid and designed to stack your own way.</p>
-          <a className="button button-ink" href="#products">Enter Rosé Dopamine <ArrowIcon /></a>
-        </div>
-      </section>
-
-      <section id="products" className="section products reveal">
-        <div className="product-heading">
-          <div><p className="eyebrow eyebrow-dark">New &amp; most wanted</p><h2>Pieces with<br />personality.</h2></div>
-          <a className="text-link text-link-dark" href="#collections">Shop all jewellery <ArrowIcon /></a>
-        </div>
-        <div className="product-rail">
+        <div className="product-grid">
           {products.map((product) => (
             <article className="product-card" key={product.name}>
-              <a className={`product-image product-${product.tone}`} href="#concierge">
-                <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
-                <span className="product-hover">View piece <ArrowIcon /></span>
-              </a>
-              <div className="product-meta"><div><h3>{product.name}</h3><p>{product.detail}</p></div><a href="#concierge">Discover</a></div>
+              <a className="product-image" href="#concierge"><img src={product.image} alt={product.name} loading="lazy" decoding="async" /></a>
+              <a className="product-info" href="#concierge"><h3>{product.name}</h3><p>{product.detail}</p></a>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="stack-story reveal">
-        <div className="stack-photo">
-          <img src={assetPath("images/shop-the-stack.webp")} alt="A hand wearing a colourful stack of Rosé diamond rings" loading="lazy" decoding="async" />
+      <section id="categories" className="section category-section">
+        <div className="section-intro"><p className="micro-label">Explore jewellery</p><h2>Find your piece.</h2></div>
+        <div className="category-editorial-grid">
+          <a className="category-tile category-rings" href="/collections/rings"><Placeholder label="RINGS — EDITORIAL IMAGE" ratio="3:4" /><span><b>Rings</b><small>Discover</small></span></a>
+          <a className="category-tile category-necklaces" href="/collections/necklaces"><Placeholder label="NECKLACES — EDITORIAL IMAGE" ratio="4:5" /><span><b>Necklaces</b><small>Discover</small></span></a>
+          <a className="category-tile category-earrings" href="/collections/earrings"><Placeholder label="EARRINGS — EDITORIAL IMAGE" ratio="4:5" /><span><b>Earrings</b><small>Discover</small></span></a>
+          <a className="category-tile category-bracelets" href="/collections/bracelets"><Placeholder label="BRACELETS — EDITORIAL IMAGE" ratio="16:9" /><span><b>Bracelets</b><small>Discover</small></span></a>
         </div>
-        <div className="stack-copy">
-          <p className="eyebrow">Shop the stack</p>
-          <h2>Build a stack<br />that feels like you.</h2>
-          <p>Choose one hero stone, add a line of colour, then mix shapes or metals. Shop the complete edit or use it as a starting point.</p>
-          <div className="stack-formula" aria-label="How to build a ring stack">
-            <span><img className="stack-step-icon" src={assetPath("icons/stack-gem.svg")} alt="" aria-hidden="true" /><b>Choose a hero</b><em>Start with your favourite stone</em></span>
-            <span><img className="stack-step-icon" src={assetPath("icons/stack-palette.svg")} alt="" aria-hidden="true" /><b>Add colour</b><em>Match it or make it clash</em></span>
-            <span><img className="stack-step-icon" src={assetPath("icons/stack-layers.svg")} alt="" aria-hidden="true" /><b>Make it yours</b><em>Stack two, three or more</em></span>
+      </section>
+
+      <div className="dopamine-chapter">
+        <section id="dopamine" className="collection-story section-wide">
+          <div className="collection-heading">
+            <div><p className="micro-label accent-label">New collection</p><h2>Diamonds with a <span className="gradient-text">pulse.</span></h2></div>
+            <div className="collection-copy"><p>Diamond rings charged with colour, character and energy.</p><a className="underlined-link" href="/collections/rose-dopamine">Discover ROSÉ Dopamine <ArrowIcon /></a></div>
           </div>
-          <div className="stack-actions"><a className="button button-light" href="#products">Shop the complete stack</a><a className="text-link" href="#concierge">Ask a stylist <ArrowIcon /></a></div>
-        </div>
-      </section>
+          <Placeholder className="collection-hero-placeholder" label="ROSÉ DOPAMINE — CAMPAIGN IMAGE" ratio="Desktop 16:9 · Mobile 4:5" />
+        </section>
 
-      <section id="moods" className="mood-section reveal">
-        <div className="mood-intro"><div><p className="eyebrow eyebrow-dark">Shop by mood</p><h2>Choose the energy<br /><span className="diamond-text diamond-mood">you want to wear.</span></h2></div><p>Four curated edits built around colour, light and attitude. Pick the feeling first—we will show you the pieces.</p></div>
-        <div className="mood-grid">
-          {moods.map((mood) => (
-            <a className={`mood-card ${mood.className}`} href="#products" key={mood.name}>
-              <img src={mood.image} alt={`${mood.name} jewellery edit`} loading="lazy" decoding="async" />
-              <span className="mood-wash" />
-              <span className="mood-card-copy"><small>{mood.label}</small><b>{mood.name}</b><em>{mood.copy}</em><i>Shop this mood <ArrowIcon /></i></span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section className="design-piece section reveal">
-        <div className="design-copy"><p className="eyebrow eyebrow-dark">Design your piece</p><h2>Make it<br /><span className="diamond-text diamond-emerald">unmistakably yours.</span></h2><p>Choose the stone, colour and setting. We will craft it in Hong Kong with certified diamonds and 18K gold.</p><div className="render-requirement"><RotateIcon /><span><b>Interactive 360° preview</b><small>The final experience uses a dedicated GLB product model—not a simulated CSS ring.</small></span></div><a className="button button-ink" href="#concierge">Start designing <ArrowIcon /></a></div>
-        <div className="design-studio">
-          <div className="design-preview"><img src={assetPath("images/rose-hero.webp")} alt="Pink oval diamond ring preview" loading="lazy" decoding="async" /><span><RotateIcon /> 360° MODEL AREA</span></div>
-          <div className="design-controls">
-            {designOptions.map(({ label, value, icon }, index) => <button key={label}><i className="line-icon" aria-hidden="true">{icon}</i><small>0{index + 1}</small><b>{label}</b><span>{value}</span></button>)}
+        <section id="stacking" className="section stack-editorial">
+          <figure className="stack-visual"><img src={assetPath("images/shop-the-stack.webp")} alt="A hand wearing a colourful stack of ROSÉ diamond rings" loading="lazy" decoding="async" /></figure>
+          <div className="stack-content">
+            <p className="micro-label">The art of stacking</p>
+            <h2>Wear one.<br />Stack your favourites.</h2>
+            <p>Each ROSÉ Dopamine ring is a finished design, created to look complete on its own and effortless alongside the others. Choose a single colour statement or combine your favourites into a stack that feels entirely your own.</p>
+            <a className="button button-dark" href="/collections/rose-dopamine">Explore the collection</a>
           </div>
+        </section>
+      </div>
+
+      <section id="design-your-piece" className="design-story section-wide">
+        <div className="design-heading"><p className="micro-label">Design Your Piece</p><h2>Make it<br /><span className="gradient-text rose-gradient">unmistakably yours.</span></h2></div>
+        <div className="design-grid">
+          <Placeholder className="design-main-placeholder" label="BESPOKE PROCESS — PRIMARY IMAGE" ratio="4:5" />
+          <div className="design-copy">
+            <p>From the first conversation to the final setting, every decision begins with your story. Choose a stone, refine the proportions and create a piece that could belong to no one else.</p>
+            <ol>
+              <li><span>01</span><div><b>Tell us what you imagine</b><small>A private conversation about the feeling, occasion and budget.</small></div></li>
+              <li><span>02</span><div><b>Discover your stone</b><small>Diamonds sourced individually for your brief.</small></div></li>
+              <li><span>03</span><div><b>Refine every detail</b><small>Proportion, colour, setting and the way it will be worn.</small></div></li>
+              <li><span>04</span><div><b>Made for you</b><small>Crafted in 18K gold and presented privately.</small></div></li>
+            </ol>
+            <a className="button button-dark" href="#concierge">Discover the process</a>
+          </div>
+          <Placeholder className="design-detail-placeholder" label="STONE OR SKETCH — DETAIL IMAGE" ratio="3:4" />
         </div>
       </section>
 
-      <section className="community reveal">
-        <div className="community-heading"><p className="eyebrow">Rosé in the wild</p><h2>Worn your way.</h2><p>Real women, real stacks, real energy.</p></div>
-        <div className="community-grid">
-          {instagramPosts.map((post) => <article className="instagram-card" key={post}><blockquote className="instagram-media" data-instgrm-permalink={`${post}?utm_source=ig_embed&utm_campaign=loading`} data-instgrm-version="14"><a href={post} target="_blank" rel="noreferrer">View this post on Instagram</a></blockquote></article>)}
-        </div>
+      <section id="our-world" className="world-pause">
+        <p className="micro-label">Our World</p>
+        <blockquote>Jewellery for every version of you.</blockquote>
+        <p>Born in Hong Kong. Shaped by contrast, colour and a belief that fine jewellery should feel deeply personal.</p>
+        <button className="underlined-link" onClick={() => setActivePanel("world")}>Enter our world <ArrowIcon /></button>
       </section>
 
-      <section id="concierge" className="concierge reveal">
+      <section id="worn-your-way" className="worn-your-way section">
+        <div className="section-intro row-intro"><div><p className="micro-label">ROSÉ in the wild</p><h2>Worn your way.</h2></div><p>Real women, real stacks, real energy.</p></div>
+        <div className="social-grid"><Placeholder label="SOCIAL IMAGE 01" ratio="4:5" /><Placeholder label="SOCIAL IMAGE 02" ratio="4:5" /><Placeholder label="SOCIAL IMAGE 03" ratio="4:5" /></div>
+      </section>
+
+      <section id="concierge" className="concierge">
         <picture className="concierge-media">
           <source media="(max-width: 700px)" srcSet={assetPath("images/private-concierge-mobile.webp")} type="image/webp" />
           <img src={assetPath("images/private-concierge-desktop.webp")} alt="A private diamond ring consultation" loading="lazy" decoding="async" />
         </picture>
+        <div className="concierge-shade" />
         <div className="concierge-content">
-          <p className="eyebrow">Private concierge</p><h2>Need a little<br />help choosing?</h2><p>Talk to a Rosé specialist about stones, sizing, styling or a piece made entirely for you.</p>
-          <div className="concierge-actions"><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="text-link" href="https://wa.me/85292270884">Chat on WhatsApp <ArrowIcon /></a></div>
+          <p className="micro-label">Concierge</p>
+          <h2>Need a little<br />help choosing?</h2>
+          <p>Talk to a ROSÉ specialist about stones, sizing, styling or a piece made entirely for you.</p>
+          <div><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="underlined-link light-link" href="https://wa.me/85292270884">Chat on WhatsApp <ArrowIcon /></a></div>
         </div>
       </section>
 
-      <footer id="footer">
-        <div className="footer-brand"><span className="wordmark">ROSÉ<small>DIAMONDS</small></span><p>Brilliance, in every mood.</p></div>
-        <div className="footer-links"><div><small>JEWELLERY</small><a href="#collections">Rings</a><a href="#collections">Necklaces</a><a href="#collections">Earrings</a><a href="#collections">Bracelets</a></div><div><small>THE HOUSE</small><a href="#dopamine">Rosé Dopamine</a><a href="#moods">Shop by mood</a><a href="#concierge">Design your piece</a><a href="#concierge">Concierge</a></div><div><small>CLIENT CARE</small><a href="#footer">Delivery &amp; returns</a><a href="#footer">Size guide</a><a href="#footer">Jewellery care</a><a href="#footer">Contact</a></div></div>
-        <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form><label className="sr-only" htmlFor="email">Email address</label><input id="email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe"><ArrowIcon /></button></form></div>
-        <div className="footer-bottom"><span>© 2026 Rosé Diamonds Ltd.</span><span>Hong Kong · Worldwide delivery</span><div className="footer-socials"><a href="#footer" aria-label="Instagram"><img src={assetPath("icons/instagram.svg")} alt="" /></a><a href="#footer" aria-label="TikTok"><img src={assetPath("icons/tiktok.svg")} alt="" /></a><a href="#footer" aria-label="Pinterest"><img src={assetPath("icons/pinterest.svg")} alt="" /></a></div></div>
-      </footer>
+      <SiteFooter />
 
-      {menuOpen && (
-        <div className="menu-panel" role="dialog" aria-modal="true" aria-label="Main menu">
-          <div className="menu-top"><button className="menu-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button><span className="wordmark menu-wordmark">ROSÉ<small>DIAMONDS</small></span><button className="menu-bag" aria-label="Shopping bag"><BagIcon /></button></div>
-          <div className="menu-body"><nav className="menu-links">{["New & Dopamine", "Rings", "Necklaces", "Earrings", "Bracelets", "Design your piece", "Shop by mood"].map((item, i) => <a href={i === 0 ? "#dopamine" : i === 5 ? "#concierge" : i === 6 ? "#moods" : "#collections"} onClick={() => setMenuOpen(false)} key={item}><span>{item}</span><MenuArrowIcon /></a>)}</nav><div className="menu-campaign" style={{ backgroundImage: `url("${assetPath("images/rose-dopamine.webp")}")` }}><span>NEW COLLECTION</span><h3>Rosé<br />Dopamine</h3></div></div>
-          <div className="menu-service"><a href="#concierge" onClick={() => setMenuOpen(false)}>Private concierge</a><a href="#footer" onClick={() => setMenuOpen(false)}>Delivery &amp; returns</a><a href="#footer" onClick={() => setMenuOpen(false)}>Language / Region</a><a href="#footer" onClick={() => setMenuOpen(false)}>Client login</a></div>
+      {activePanel && (
+        <div className={`nav-overlay nav-overlay-${activePanel}`} role="dialog" aria-modal="true" aria-label={`${activePanel} menu`}>
+          <button className="nav-backdrop" onClick={closePanel} aria-label="Close menu" />
+          <div className="nav-sheet">
+            <div className="nav-sheet-top">
+              <button className="nav-close" onClick={closePanel} aria-label="Close menu"><span /><span /></button>
+              <a className="wordmark" href="#top" onClick={closePanel} aria-label="ROSÉ Diamonds home"><BrandLogo /></a>
+              <button className="nav-sheet-bag" onClick={() => setActivePanel("bag")} aria-label="Shopping bag"><BagIcon /><sup>0</sup></button>
+            </div>
+
+            {(activePanel === "shop" || activePanel === "mobile") && (
+              <div className="nav-shop-layout">
+                <div className="nav-shop-intro"><small>Shop</small><p>Fine jewellery chosen by piece, collection or feeling.</p></div>
+                <div className="nav-shop-row">
+                  <div className="nav-column nav-featured"><small>Discover</small><a href="/collections/rose-dopamine" onClick={closePanel}>New In <MenuArrowIcon /></a><a href="#most-wanted" onClick={closePanel}>Most Wanted <MenuArrowIcon /></a><a href="/collections/all-jewellery" onClick={closePanel}>All Jewellery <MenuArrowIcon /></a></div>
+                  <div className="nav-column"><small>Jewellery</small><a href="/collections/rings" onClick={closePanel}>Rings <MenuArrowIcon /></a><a href="/collections/necklaces" onClick={closePanel}>Necklaces <MenuArrowIcon /></a><a href="/collections/earrings" onClick={closePanel}>Earrings <MenuArrowIcon /></a><a href="/collections/bracelets" onClick={closePanel}>Bracelets <MenuArrowIcon /></a></div>
+                  <div className="nav-column"><small>Collections &amp; services</small><a href="/collections/rose-dopamine" onClick={closePanel}>ROSÉ Dopamine <MenuArrowIcon /></a><a href="#design-your-piece" onClick={closePanel}>Design Your Piece <MenuArrowIcon /></a><a href="#concierge" onClick={closePanel}>Concierge <MenuArrowIcon /></a></div>
+                </div>
+              </div>
+            )}
+
+            {activePanel === "world" && (
+              <div className="nav-world-layout"><div><small>Our World</small><h3>Jewellery for every version of you.</h3><p>Born in Hong Kong. Fine diamonds, expressive colour and a personal point of view.</p></div><nav><a href="#our-world" onClick={closePanel}>Our Story <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Brand Philosophy <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Our Diamonds <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Craft &amp; Materials <MenuArrowIcon /></a></nav></div>
+            )}
+
+            {activePanel === "search" && (
+              <div className="nav-search-layout"><label htmlFor="site-search">What are you looking for?</label><div><input id="site-search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search jewellery, collections and services" /><span>{searchResults.length} results</span></div><nav><small>{searchQuery ? "Results" : "Quick links"}</small>{searchResults.length ? searchResults.map((item) => <a href={item.target} onClick={closePanel} key={item.label}>{item.label}</a>) : <p>No matching pieces yet. Try “rings” or “Dopamine”.</p>}</nav></div>
+            )}
+
+            {activePanel === "bag" && <div className="nav-bag-layout"><small>Your bag</small><h3>Your bag is currently empty.</h3><p>Discover pieces chosen to be worn your way.</p><a className="button button-dark" href="/collections/all-jewellery" onClick={closePanel}>Explore jewellery</a></div>}
+
+            {activePanel === "account" && <div id="account" className="nav-account-layout"><small>My Account</small><h3>Welcome to ROSÉ.</h3><form onSubmit={(event) => event.preventDefault()}><label>Email<input type="email" placeholder="you@example.com" /></label><label>Password<input type="password" placeholder="••••••••" /></label><button className="button button-dark" type="submit">Sign in</button></form><button className="underlined-link" onClick={closePanel}>Create an account</button></div>}
+
+            {activePanel === "mobile" && <div className="nav-mobile-secondary"><button onClick={() => setActivePanel("world")}>Our World <MenuArrowIcon /></button><button onClick={() => setActivePanel("search")}>Search <MenuArrowIcon /></button><a href="#concierge" onClick={closePanel}>Concierge <MenuArrowIcon /></a><button onClick={() => setActivePanel("account")}>My Account <MenuArrowIcon /></button></div>}
+          </div>
         </div>
       )}
     </main>

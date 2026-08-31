@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ROSÉ Diamonds — Brilliance, in every mood",
-  description: "A high-fidelity homepage concept for expressive fine jewellery born in Hong Kong.",
+  description: "Fine diamonds, expressive colour and jewellery made personal.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
