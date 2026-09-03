@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ROSÉ Diamonds — Brilliance, in every mood",
+  title: "ROSÉ Diamonds — Diamonds that reflect you",
   description: "Fine diamonds, expressive colour and jewellery made personal.",
 };
 

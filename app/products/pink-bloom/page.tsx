@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function PinkBloomProductPage() {
-  return <ProductDetailView />;
+  return <ProductDetailView productId="pink-bloom" />;
 }

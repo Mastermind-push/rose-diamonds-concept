@@ -1,10 +1,28 @@
 export type ProductCategory = "Rings" | "Necklaces" | "Earrings" | "Bracelets";
+export type StorefrontDiamondType = "natural" | "laboratory";
+
+export type StorefrontCaratOption = {
+  id: string;
+  label: string;
+};
+
+export type StorefrontProductFact = {
+  id: string;
+  label: string;
+  value: string;
+};
+
+export type StorefrontProductImage = {
+  id: string;
+  src: string;
+  altText: string;
+};
 
 export type Product = {
   id: string;
   name: string;
   category: ProductCategory;
-  collection: "ROSÉ Signature" | "ROSÉ Dopamine";
+  collection: "ROSÉ Signature" | "ROSÉ Dopamine" | "";
   detail: string;
   price: number;
   priceLabel: string;
@@ -13,6 +31,13 @@ export type Product = {
   primary: string;
   secondary: string;
   isNew?: boolean;
+  fullDescription?: string;
+  diamondTypes?: StorefrontDiamondType[];
+  caratOptions?: StorefrontCaratOption[];
+  variantPrices?: Record<string, number>;
+  sizes?: string[];
+  facts?: StorefrontProductFact[];
+  images?: StorefrontProductImage[];
 };
 
 const imagePair = (slug: string) => ({
@@ -66,6 +91,12 @@ export const catalogConfigs = {
     title: "All Jewellery",
     description: "Diamonds, expressive colour and pieces chosen to become part of your everyday life.",
   },
+  "new-in": {
+    eyebrow: "The latest pieces",
+    title: "New In",
+    description: "The newest ROSÉ pieces, selected across colour, diamonds and modern signatures.",
+    newOnly: true,
+  },
   rings: {
     eyebrow: "Jewellery",
     title: "Rings",
@@ -95,6 +126,18 @@ export const catalogConfigs = {
     title: "ROSÉ Dopamine",
     description: "A little joy set in gold, diamonds and vivid colour. Wear one or build your own stack.",
     collection: "ROSÉ Dopamine" as const,
+  },
+  "rose-signature": {
+    eyebrow: "The collection",
+    title: "ROSÉ Signature",
+    description: "Enduring diamond forms shaped with clarity, balance and a distinctly ROSÉ point of view.",
+    collection: "ROSÉ Signature" as const,
+  },
+  gifts: {
+    eyebrow: "The gift edit",
+    title: "Gifts",
+    description: "Diamonds chosen to mark a moment, say something meaningful or simply bring joy.",
+    productIds: ["round-studs", "oval-studs", "pear-studs", "round-pendant", "queen-hearts-pendant", "pink-bloom", "sweetheart", "slim-tennis-bracelet"] as readonly string[],
   },
 } as const;
 

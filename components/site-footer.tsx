@@ -1,24 +1,22 @@
 "use client";
 
+import Link from "next/link";
+
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 
 const ArrowIcon = () => <img className="ui-arrow" src={assetPath("icons/arrow-up-right.svg")} alt="" aria-hidden="true" />;
 
-function BrandLogo() {
-  return <span className="brand-logo" aria-hidden="true"><img src={assetPath("images/rose-wordmark-transparent.webp")} alt="" /></span>;
-}
-
 export default function SiteFooter() {
   return (
     <footer id="footer">
-      <div className="footer-brand"><span className="wordmark"><BrandLogo /></span><p>Brilliance, in every mood.</p></div>
+      <div className="footer-brand"><p style={{ backgroundImage: `url(${assetPath("images/footer-blue-texture.avif")})` }}>Brilliance,<br />in every mood.</p></div>
       <div className="footer-links">
-        <div><small>JEWELLERY</small><a href="/collections/all-jewellery">All Jewellery</a><a href="/collections/rings">Rings</a><a href="/collections/necklaces">Necklaces</a><a href="/collections/earrings">Earrings</a><a href="/collections/bracelets">Bracelets</a></div>
-        <div><small>OUR WORLD</small><a href="/collections/rose-dopamine">ROSÉ Dopamine</a><a href="/#design-your-piece">Design Your Piece</a><a href="/#our-world">Our Story</a><a href="/#concierge">Concierge</a></div>
-        <div><small>CLIENT CARE</small><a href="#footer">Delivery &amp; Returns</a><a href="#footer">Size Guide</a><a href="#footer">Jewellery Care</a><a href="#footer">Contact</a></div>
+        <div><small>JEWELLERY</small><Link href="/collections/all-jewellery">All Jewellery</Link><Link href="/collections/rings">Rings</Link><Link href="/collections/necklaces">Necklaces</Link><Link href="/collections/earrings">Earrings</Link><Link href="/collections/bracelets">Bracelets</Link></div>
+        <div><small>OUR WORLD</small><Link href="/our-philosophy">Our Philosophy</Link><Link href="/design-your-piece">Craftsmanship</Link><Link href="/policies/ethical-sourcing">Diamonds &amp; Sourcing</Link></div>
+        <div><small>CLIENT SERVICES</small><Link href="/design-your-piece">Design Your Piece</Link><Link href="/consultation">Contact Us</Link><Link href="/products/pink-bloom">Size Guide</Link><Link href="/policies/delivery-and-returns">Delivery &amp; Returns</Link><Link href="/consultation">Jewellery Care</Link></div>
       </div>
-      <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form onSubmit={(event) => event.preventDefault()}><label className="sr-only" htmlFor="footer-email">Email address</label><input id="footer-email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe"><ArrowIcon /></button></form></div>
-      <div className="footer-bottom"><span>© 2026 ROSÉ Diamonds Ltd.</span><span>Hong Kong · Worldwide delivery</span><div className="footer-socials"><a href="https://instagram.com/rosediamondshk" aria-label="Instagram"><img src={assetPath("icons/instagram.svg")} alt="" /></a><a href="https://tiktok.com/@rosediamondshk" aria-label="TikTok"><img src={assetPath("icons/tiktok.svg")} alt="" /></a><a href="#footer" aria-label="Pinterest"><img src={assetPath("icons/pinterest.svg")} alt="" /></a></div></div>
+      <div className="newsletter"><small>JOIN OUR WORLD</small><p>New colour, new drops, no noise.</p><form onSubmit={(event) => event.preventDefault()}><label className="sr-only" htmlFor="footer-email">Email address</label><input id="footer-email" type="email" placeholder="Email address" /><button type="submit" aria-label="Subscribe"><ArrowIcon /></button></form><div className="footer-socials"><a href="https://instagram.com/rosediamondshk" aria-label="Instagram"><img src={assetPath("icons/instagram.svg")} alt="" /></a><a href="https://tiktok.com/@rosediamondshk" aria-label="TikTok"><img src={assetPath("icons/tiktok.svg")} alt="" /></a><a href="#footer" aria-label="Pinterest"><img src={assetPath("icons/pinterest.svg")} alt="" /></a></div></div>
+      <div className="footer-bottom"><nav className="footer-policy-links" aria-label="Legal policies"><Link href="/policies/privacy">Privacy Policy</Link><Link href="/policies/terms-of-service">Terms of Service</Link><Link href="/policies/ethical-sourcing">Ethical Sourcing</Link><Link href="/policies/modern-slavery">Modern Slavery</Link></nav><span className="footer-delivery">Worldwide delivery</span><span className="footer-copyright">© 2026 ROSÉ Diamonds Ltd.</span></div>
     </footer>
   );
 }

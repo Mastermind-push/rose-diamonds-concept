@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import SiteFooter from "@/components/site-footer";
+import { useClientCommerce } from "@/components/client-commerce";
+import { BagDrawer, ConciergeDrawer } from "@/components/client-drawers";
+import { LeftNavigationHeader, ShopNavigation, WorldNavigation } from "@/components/navigation-menus";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 
@@ -13,7 +16,7 @@ function BrandLogo({ inverse = false }: { inverse?: boolean }) {
   return <span className={`brand-logo${inverse ? " is-inverse" : ""}`} aria-hidden="true"><img src={assetPath("images/rose-wordmark-transparent.webp")} alt="" /></span>;
 }
 
-type Panel = "shop" | "world" | "search" | "bag" | "account" | "mobile" | null;
+type Panel = "shop" | "world" | "search" | "bag" | "account" | "concierge" | "mobile" | null;
 
 const products = [
   { name: "Oval Blush Ring", detail: "18K white gold · Pink diamond", image: assetPath("images/rose-hero.webp") },
@@ -23,14 +26,15 @@ const products = [
 ];
 
 const searchable = [
-  { label: "Most Wanted", target: "#most-wanted" },
+  { label: "Our Selection", target: "#rose-edit" },
   { label: "All Jewellery", target: "/collections/all-jewellery" },
   { label: "ROSÉ Dopamine", target: "/collections/rose-dopamine" },
   { label: "Rings", target: "/collections/rings" },
   { label: "Necklaces", target: "/collections/necklaces" },
   { label: "Earrings", target: "/collections/earrings" },
   { label: "Bracelets", target: "/collections/bracelets" },
-  { label: "Design Your Piece", target: "#design-your-piece" },
+  { label: "Design Your Piece", target: "/design-your-piece" },
+  { label: "Our Philosophy", target: "/our-philosophy" },
   { label: "Concierge", target: "#concierge" },
 ];
 
@@ -39,6 +43,7 @@ function Placeholder({ label, ratio, className = "" }: { label: string; ratio: s
 }
 
 export default function Home() {
+  const commerce = useClientCommerce();
   const [activePanel, setActivePanel] = useState<Panel>(null);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,12 +89,13 @@ export default function Home() {
         <a className="wordmark" href="#top" aria-label="ROSÉ Diamonds home"><BrandLogo inverse={!scrolled} /></a>
 
         <nav className="desktop-nav desktop-nav-right" aria-label="Client navigation">
-          <a href="#concierge">Concierge</a>
+          <button onClick={() => setActivePanel("concierge")}>Concierge</button>
           <button onClick={() => setActivePanel("account")}>My Account</button>
-          <button onClick={() => setActivePanel("bag")} aria-label="Shopping bag">Bag <sup>0</sup></button>
+          <a href="/wishlist">Wishlist <sup>{commerce.wishlistCount}</sup></a>
+          <button onClick={() => setActivePanel("bag")} aria-label="Shopping bag">Bag <sup>{commerce.bagCount}</sup></button>
         </nav>
 
-        <button className="mobile-bag" aria-label="Shopping bag" onClick={() => setActivePanel("bag")}><BagIcon /><sup>0</sup></button>
+        <button className="mobile-bag" aria-label="Shopping bag" onClick={() => setActivePanel("bag")}><BagIcon /><sup>{commerce.bagCount}</sup></button>
       </header>
 
       <section id="top" className="hero hero-editorial">
@@ -98,14 +104,14 @@ export default function Home() {
         </picture>
         <div className="hero-overlay" />
         <div className="hero-copy">
-          <h1>Brilliance, in every <em>mood.</em></h1>
+          <h1>Diamonds<br />that ref{"\u200C"}lect you.</h1>
           <a className="button button-outline-light" href="/collections/all-jewellery">Explore jewellery</a>
         </div>
       </section>
 
-      <section id="most-wanted" className="section most-wanted">
+      <section id="rose-edit" className="section most-wanted">
         <div className="section-intro row-intro">
-          <div><p className="micro-label">The ROSÉ edit</p><h2>Most Wanted</h2></div>
+          <h2>Our Selection</h2>
           <a className="underlined-link" href="/collections/all-jewellery">View all jewellery <ArrowIcon /></a>
         </div>
         <div className="product-grid">
@@ -121,17 +127,29 @@ export default function Home() {
       <section id="categories" className="section category-section">
         <div className="section-intro"><p className="micro-label">Explore jewellery</p><h2>Find your piece.</h2></div>
         <div className="category-editorial-grid">
-          <a className="category-tile category-rings" href="/collections/rings"><Placeholder label="RINGS — EDITORIAL IMAGE" ratio="3:4" /><span><b>Rings</b><small>Discover</small></span></a>
-          <a className="category-tile category-necklaces" href="/collections/necklaces"><Placeholder label="NECKLACES — EDITORIAL IMAGE" ratio="4:5" /><span><b>Necklaces</b><small>Discover</small></span></a>
-          <a className="category-tile category-earrings" href="/collections/earrings"><Placeholder label="EARRINGS — EDITORIAL IMAGE" ratio="4:5" /><span><b>Earrings</b><small>Discover</small></span></a>
-          <a className="category-tile category-bracelets" href="/collections/bracelets"><Placeholder label="BRACELETS — EDITORIAL IMAGE" ratio="16:9" /><span><b>Bracelets</b><small>Discover</small></span></a>
+          <a className="category-tile category-rings" href="/collections/rings">
+            <div className="category-media"><img src={assetPath("images/find-your-piece-rings.jpg")} alt="A model wearing a pink diamond ring" loading="lazy" decoding="async" /></div>
+            <span><b>Rings</b><small>Discover</small></span>
+          </a>
+          <a className="category-tile category-necklaces" href="/collections/necklaces">
+            <div className="category-media"><img src={assetPath("images/find-your-piece-necklaces.jpg")} alt="A diamond pendant worn at the collarbone" loading="lazy" decoding="async" /></div>
+            <span><b>Necklaces</b><small>Discover</small></span>
+          </a>
+          <a className="category-tile category-earrings" href="/collections/earrings">
+            <div className="category-media"><img src={assetPath("images/find-your-piece-earrings.jpg")} alt="A model wearing the Rosé Queen of Hearts Earring" loading="lazy" decoding="async" /></div>
+            <span><b>Earrings</b><small>Discover</small></span>
+          </a>
+          <a className="category-tile category-bracelets" href="/collections/bracelets">
+            <div className="category-media"><img src={assetPath("images/find-your-piece-bracelets.jpg")} alt="A diamond tennis bracelet worn on the wrist" loading="lazy" decoding="async" /></div>
+            <span><b>Bracelets</b><small>Discover</small></span>
+          </a>
         </div>
       </section>
 
       <div className="dopamine-chapter">
         <section id="dopamine" className="collection-story section-wide">
           <div className="collection-heading">
-            <div><p className="micro-label accent-label">New collection</p><h2>Diamonds with a <span className="gradient-text">pulse.</span></h2></div>
+            <div><p className="micro-label accent-label">New collection</p><h2 className="pink-texture-title" style={{ backgroundImage: `url(${assetPath("images/pink-diamond-texture.avif")})` }}>Diamonds with a pulse.</h2></div>
             <div className="collection-copy"><p>Diamond rings charged with colour, character and energy.</p><a className="underlined-link" href="/collections/rose-dopamine">Discover ROSÉ Dopamine <ArrowIcon /></a></div>
           </div>
           <Placeholder className="collection-hero-placeholder" label="ROSÉ DOPAMINE — CAMPAIGN IMAGE" ratio="Desktop 16:9 · Mobile 4:5" />
@@ -148,21 +166,16 @@ export default function Home() {
         </section>
       </div>
 
-      <section id="design-your-piece" className="design-story section-wide">
-        <div className="design-heading"><p className="micro-label">Design Your Piece</p><h2>Make it<br /><span className="gradient-text rose-gradient">unmistakably yours.</span></h2></div>
+      <section id="design-your-piece" className="design-story section-wide" style={{ backgroundImage: `url(${assetPath("images/design-your-piece-texture.jpg")})` }}>
         <div className="design-grid">
-          <Placeholder className="design-main-placeholder" label="BESPOKE PROCESS — PRIMARY IMAGE" ratio="4:5" />
-          <div className="design-copy">
-            <p>From the first conversation to the final setting, every decision begins with your story. Choose a stone, refine the proportions and create a piece that could belong to no one else.</p>
-            <ol>
-              <li><span>01</span><div><b>Tell us what you imagine</b><small>A private conversation about the feeling, occasion and budget.</small></div></li>
-              <li><span>02</span><div><b>Discover your stone</b><small>Diamonds sourced individually for your brief.</small></div></li>
-              <li><span>03</span><div><b>Refine every detail</b><small>Proportion, colour, setting and the way it will be worn.</small></div></li>
-              <li><span>04</span><div><b>Made for you</b><small>Crafted in 18K gold and presented privately.</small></div></li>
-            </ol>
-            <a className="button button-dark" href="#concierge">Discover the process</a>
+          <div className="design-content">
+            <div className="design-heading"><p className="micro-label">Design Your Piece</p><h2>Make it<br />unmistakably yours.</h2></div>
+            <div className="design-copy">
+              <p>From the first conversation to the final setting, every decision begins with your story. Choose a stone, refine the proportions and create a piece that could belong to no one else.</p>
+              <a className="button button-outline-light" href="/design-your-piece">Discover the process</a>
+            </div>
           </div>
-          <Placeholder className="design-detail-placeholder" label="STONE OR SKETCH — DETAIL IMAGE" ratio="3:4" />
+          <Placeholder className="design-main-placeholder" label="BESPOKE COMMISSION — PRIMARY IMAGE" ratio="4:5" />
         </div>
       </section>
 
@@ -188,49 +201,43 @@ export default function Home() {
           <p className="micro-label">Concierge</p>
           <h2>Need a little<br />help choosing?</h2>
           <p>Talk to a ROSÉ specialist about stones, sizing, styling or a piece made entirely for you.</p>
-          <div><a className="button button-light" href="mailto:hello@rosehk.com">Book a consultation</a><a className="underlined-link light-link" href="https://wa.me/85292270884">Chat on WhatsApp <ArrowIcon /></a></div>
+          <div><a className="button button-light" href="/consultation">Consultation</a><a className="underlined-link light-link" href="https://wa.me/85292270884">Chat on WhatsApp <ArrowIcon /></a></div>
         </div>
       </section>
 
       <SiteFooter />
 
-      {activePanel && (
+      {activePanel && activePanel !== "bag" && activePanel !== "concierge" && (
         <div className={`nav-overlay nav-overlay-${activePanel}`} role="dialog" aria-modal="true" aria-label={`${activePanel} menu`}>
           <button className="nav-backdrop" onClick={closePanel} aria-label="Close menu" />
-          <div className="nav-sheet">
+          <div className={`nav-sheet${activePanel === "shop" || activePanel === "world" || activePanel === "search" ? " nav-sheet-left" : ""}`}>
             <div className="nav-sheet-top">
+              {(activePanel === "shop" || activePanel === "world" || activePanel === "search") && <LeftNavigationHeader active={activePanel} onSelect={setActivePanel} onClose={closePanel} />}
               <button className="nav-close" onClick={closePanel} aria-label="Close menu"><span /><span /></button>
               <a className="wordmark" href="#top" onClick={closePanel} aria-label="ROSÉ Diamonds home"><BrandLogo /></a>
-              <button className="nav-sheet-bag" onClick={() => setActivePanel("bag")} aria-label="Shopping bag"><BagIcon /><sup>0</sup></button>
+              <button className="nav-sheet-bag" onClick={() => setActivePanel("bag")} aria-label="Shopping bag"><BagIcon /><sup>{commerce.bagCount}</sup></button>
             </div>
 
             {(activePanel === "shop" || activePanel === "mobile") && (
-              <div className="nav-shop-layout">
-                <div className="nav-shop-intro"><small>Shop</small><p>Fine jewellery chosen by piece, collection or feeling.</p></div>
-                <div className="nav-shop-row">
-                  <div className="nav-column nav-featured"><small>Discover</small><a href="/collections/rose-dopamine" onClick={closePanel}>New In <MenuArrowIcon /></a><a href="#most-wanted" onClick={closePanel}>Most Wanted <MenuArrowIcon /></a><a href="/collections/all-jewellery" onClick={closePanel}>All Jewellery <MenuArrowIcon /></a></div>
-                  <div className="nav-column"><small>Jewellery</small><a href="/collections/rings" onClick={closePanel}>Rings <MenuArrowIcon /></a><a href="/collections/necklaces" onClick={closePanel}>Necklaces <MenuArrowIcon /></a><a href="/collections/earrings" onClick={closePanel}>Earrings <MenuArrowIcon /></a><a href="/collections/bracelets" onClick={closePanel}>Bracelets <MenuArrowIcon /></a></div>
-                  <div className="nav-column"><small>Collections &amp; services</small><a href="/collections/rose-dopamine" onClick={closePanel}>ROSÉ Dopamine <MenuArrowIcon /></a><a href="#design-your-piece" onClick={closePanel}>Design Your Piece <MenuArrowIcon /></a><a href="#concierge" onClick={closePanel}>Concierge <MenuArrowIcon /></a></div>
-                </div>
-              </div>
+              <ShopNavigation onNavigate={closePanel} />
             )}
 
             {activePanel === "world" && (
-              <div className="nav-world-layout"><div><small>Our World</small><h3>Jewellery for every version of you.</h3><p>Born in Hong Kong. Fine diamonds, expressive colour and a personal point of view.</p></div><nav><a href="#our-world" onClick={closePanel}>Our Story <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Brand Philosophy <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Our Diamonds <MenuArrowIcon /></a><a href="#our-world" onClick={closePanel}>Craft &amp; Materials <MenuArrowIcon /></a></nav></div>
+              <WorldNavigation onNavigate={closePanel} />
             )}
 
             {activePanel === "search" && (
               <div className="nav-search-layout"><label htmlFor="site-search">What are you looking for?</label><div><input id="site-search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search jewellery, collections and services" /><span>{searchResults.length} results</span></div><nav><small>{searchQuery ? "Results" : "Quick links"}</small>{searchResults.length ? searchResults.map((item) => <a href={item.target} onClick={closePanel} key={item.label}>{item.label}</a>) : <p>No matching pieces yet. Try “rings” or “Dopamine”.</p>}</nav></div>
             )}
 
-            {activePanel === "bag" && <div className="nav-bag-layout"><small>Your bag</small><h3>Your bag is currently empty.</h3><p>Discover pieces chosen to be worn your way.</p><a className="button button-dark" href="/collections/all-jewellery" onClick={closePanel}>Explore jewellery</a></div>}
-
             {activePanel === "account" && <div id="account" className="nav-account-layout"><small>My Account</small><h3>Welcome to ROSÉ.</h3><form onSubmit={(event) => event.preventDefault()}><label>Email<input type="email" placeholder="you@example.com" /></label><label>Password<input type="password" placeholder="••••••••" /></label><button className="button button-dark" type="submit">Sign in</button></form><button className="underlined-link" onClick={closePanel}>Create an account</button></div>}
 
-            {activePanel === "mobile" && <div className="nav-mobile-secondary"><button onClick={() => setActivePanel("world")}>Our World <MenuArrowIcon /></button><button onClick={() => setActivePanel("search")}>Search <MenuArrowIcon /></button><a href="#concierge" onClick={closePanel}>Concierge <MenuArrowIcon /></a><button onClick={() => setActivePanel("account")}>My Account <MenuArrowIcon /></button></div>}
+            {activePanel === "mobile" && <div className="nav-mobile-secondary"><button onClick={() => setActivePanel("world")}>Our World <MenuArrowIcon /></button><button onClick={() => setActivePanel("search")}>Search <MenuArrowIcon /></button><button onClick={() => setActivePanel("concierge")}>Concierge <MenuArrowIcon /></button><a href="/wishlist">Wishlist ({commerce.wishlistCount}) <MenuArrowIcon /></a></div>}
           </div>
         </div>
       )}
+      {activePanel === "bag" && <BagDrawer items={commerce.bag} onClose={closePanel} onQuantity={commerce.setQuantity} onRemove={commerce.removeFromBag} />}
+      {activePanel === "concierge" && <ConciergeDrawer onClose={closePanel} />}
     </main>
   );
 }
