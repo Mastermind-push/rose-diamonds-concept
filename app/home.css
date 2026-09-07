@@ -1,0 +1,195 @@
+/* Homepage study: Peach / Garden. Intentionally isolated from catalogue and PDP. */
+@font-face {
+  font-family: "Rose Bodoni";
+  src: url("/fonts/bodoni-moda.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Rose Manrope";
+  src: url("/fonts/manrope-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Rose Manrope";
+  src: url("/fonts/manrope-medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+}
+.rose-home {
+  --porcelain: #FBF8F7;
+  --paper: #FBF8F7;
+  --ink: #25231F;
+  --muted: #6B625E;
+  --line: #DDD6D1;
+  --rose: #8C4351;
+  --garden: #263E2D;
+  --display: "Rose Bodoni", "Bodoni 72", Didot, serif;
+  --sans: "Rose Manrope", "Helvetica Neue", sans-serif;
+  --page-pad: clamp(24px, 5vw, 80px);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.rose-home h1, .rose-home h2, .rose-home h3 { font-family: var(--display); font-weight: 400; font-optical-sizing: auto; }
+.rose-home h2 { font-size: clamp(38px, 3.7vw, 58px); line-height: 1.14; letter-spacing: -.035em; }
+.rose-home .micro-label { margin-bottom: 20px; font-size: 12px; line-height: 1.5; letter-spacing: .16em; }
+.rose-home .section { padding: 96px var(--page-pad); }
+.rose-home section[id], .rose-home #occasions-title { scroll-margin-top: 100px; }
+.rose-home .section-intro { margin-bottom: 36px; }
+.rose-home .underlined-link { padding: 7px 0; font-size: 12px; line-height: 1.5; letter-spacing: .075em; gap: 16px; }
+.rose-home .ui-arrow { width: 14px; height: 14px; opacity: 1; }
+.rose-home .button { min-height: 50px; font-size: 12px; line-height: 1.4; letter-spacing: .08em; }
+.rose-home a:focus-visible, .rose-home button:focus-visible, .rose-home input:focus-visible { outline: 2px solid var(--rose); outline-offset: 5px; }
+.rose-home .site-header.hero-header:not(.is-scrolled) { color: var(--ink); }
+.rose-home .site-header.hero-header:not(.is-scrolled) .ui-bag { filter: none; }
+.rose-home .site-header { transition: transform .26s ease, height .35s ease, background .35s ease, border-color .35s ease; }
+.rose-home .site-header.is-hidden:not(:focus-within) { transform: translateY(-100%); pointer-events: none; }
+.rose-home .site-header:focus-within { transform: translateY(0); }
+
+/* Full-screen campaign image; its open left side carries the desktop copy. */
+.rose-home .home-hero { position: relative; min-height: 100svh; height: 100svh; overflow: hidden; display: flex; align-items: center; background: #F4D7D4; }
+.rose-home .home-hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.rose-home .home-hero-copy { position: relative; width: 47%; padding: 65px 0 0 var(--page-pad); }
+.rose-home .home-hero-copy h1 { margin: 0; font-size: clamp(45px, 4.5vw, 71px); line-height: 1.09; letter-spacing: -.04em; }
+.rose-home .home-hero-copy > p:not(.micro-label) { max-width: 290px; margin: 26px 0 30px; font-size: 15px; line-height: 1.6; }
+.rose-home .home-button { gap: 24px; border: 1px solid #25231F70; color: var(--ink); padding-inline: 24px; background: transparent; }
+.rose-home .home-button:hover { background: var(--ink); color: var(--paper); }
+.rose-home .home-button:hover .ui-arrow { filter: invert(1); }
+
+/* Original Our Selection merchandising and typography. */
+.rose-home .most-wanted { --display: "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif; --sans: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-family: var(--sans); line-height: normal; }
+.rose-home .most-wanted h2 { font-size: clamp(24px, 2.25vw, 34px); line-height: 1.07; letter-spacing: -.012em; }
+.rose-home .most-wanted .section-intro { margin-bottom: 36px; }
+.rose-home .most-wanted .underlined-link { padding: 0 0 5px; font-size: 8px; letter-spacing: .14em; line-height: normal; gap: 9px; }
+.rose-home .most-wanted .ui-arrow { width: 12px; height: 12px; opacity: .72; }
+.rose-home .product-info h3 { font-size: clamp(18px, 1.45vw, 23px); letter-spacing: 0; }
+.rose-home .category-section { padding-top: 24px; padding-bottom: 48px; }
+.rose-home .category-section .section-intro { margin-left: 0; width: auto; }
+.rose-home .category-section h2 { font-size: clamp(38px, 3.7vw, 58px); }
+.rose-home .category-editorial-grid { grid-template-columns: 1.15fr .8fr .8fr; gap: 32px 24px; }
+.rose-home .category-rings .category-media { aspect-ratio: 3 / 4.7; }
+.rose-home .category-tile > span { padding: 16px 0 0; align-items: center; }
+.rose-home .category-tile b { font-size: 28px; line-height: 1.2; }
+.rose-home .category-tile small { font-size: 12px; letter-spacing: .05em; }
+
+/* Editorial chapters share one warm surface, but change scale and pace. */
+.rose-home .home-story { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 8vw, 128px); align-items: center; }
+.rose-home .home-story > figure { margin: 0; }
+.rose-home .home-story > figure > img:first-child { width: 100%; aspect-ratio: 4 / 5; display: block; object-fit: cover; }
+.rose-home .home-story-copy { max-width: 460px; }
+.rose-home .home-story-copy > p:not(.micro-label) { margin: 28px 0; max-width: 400px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+.rose-home .home-stack .home-story-copy { padding-right: 12px; }
+.rose-home .home-stack > figure { width: 94%; }
+.rose-home .home-occasions { position: relative; isolation: isolate; background: var(--garden); padding: 48px var(--page-pad); overflow: hidden; }
+.rose-home .home-meadow { position: absolute; z-index: -1; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 55%; }
+.rose-home .home-occasion-grid { max-width: 1100px; margin-inline: auto; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 90px); }
+.rose-home .home-occasion { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 16px 16px 28px; border-radius: 0; background: var(--paper); overflow: hidden; }
+.rose-home .home-occasion h3 { margin: 12px 0 10px; font-size: clamp(27px, 2.6vw, 37px); letter-spacing: -.035em; line-height: 1.2; }
+.rose-home .home-occasion p { margin: 0 0 16px; font-size: 13px; color: var(--muted); }
+.rose-home .home-occasion .underlined-link { margin-top: auto; }
+.rose-home .home-bespoke { padding-top: 120px; padding-bottom: 110px; }
+.rose-home .home-bespoke .home-story-copy { padding-left: clamp(0px, 3vw, 48px); }
+.rose-home .home-bespoke-visual { padding: 0; }
+.rose-home .home-worn { padding-top: 32px; }
+.rose-home .home-worn .row-intro > p { font-family: var(--sans); font-size: 14px; max-width: 280px; }
+.rose-home .home-worn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.rose-home .home-worn-grid a { min-width: 0; }
+.rose-home .home-worn-grid > a > span { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; font-size: 13px; }
+.rose-home .home-concierge { margin-inline: var(--page-pad); padding: 44px 0 46px; max-width: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; }
+.rose-home .home-concierge h2 { font-size: clamp(32px, 3vw, 46px); }
+.rose-home .home-concierge .micro-label { margin-bottom: 14px; }
+.rose-home .home-concierge > div > p:not(.micro-label) { max-width: 510px; color: var(--muted); margin: 0 auto 20px; font-size: 15px; line-height: 1.8; }
+.rose-home .home-concierge-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 30px; }
+.rose-home > footer { padding: 56px var(--page-pad) 19px; background: var(--paper); grid-template-columns: .9fr 1.7fr 1fr; gap: 2.8vw 4vw; }
+.rose-home .footer-brand p { max-width: 290px; color: #A65065; background-image: none !important; -webkit-text-fill-color: currentColor; filter: none; font-size: clamp(28px, 2.45vw, 36px); line-height: 1.02; letter-spacing: -.035em; }
+.rose-home .footer-links { gap: 24px; }
+.rose-home .footer-links small, .rose-home .newsletter small { font-size: 11px; letter-spacing: .08em; }
+.rose-home .footer-links a { font-family: var(--sans); font-size: 12px; line-height: 1.6; }
+.rose-home .newsletter p { font-size: 13px; line-height: 1.6; }
+.rose-home .newsletter input { font-size: 14px; min-height: 44px; }
+.rose-home .newsletter button { min-width: 44px; min-height: 44px; }
+.rose-home .footer-bottom { margin-top: 21px; padding-top: 12px; font-size: 10px; line-height: 1.7; letter-spacing: .035em; gap: 20px; }
+.rose-home .footer-policy-links { gap: 12px 20px; }
+
+@media (min-width: 1601px) {
+  .rose-home .home-concierge { max-width: 1440px; margin-inline: auto; }
+}
+@media (max-width: 1100px) {
+  .rose-home .home-hero-copy { width: 52%; }
+  .rose-home .home-story { gap: 48px; }
+  .rose-home > footer { grid-template-columns: 1fr 2fr; }
+  .rose-home .newsletter { grid-column: 2; max-width: 360px; }
+  .rose-home .footer-bottom { grid-template-columns: 1fr auto; }
+  .rose-home .footer-policy-links { grid-column: 1 / -1; }
+  .rose-home .footer-delivery { justify-self: start; }
+}
+@media (max-width: 760px) {
+  .rose-home { --page-pad: 24px; }
+  .rose-home .section { padding: 64px var(--page-pad); }
+  .rose-home .home-hero { height: 100svh; min-height: 100svh; align-items: center; }
+  /* Temporary landscape crop until the dedicated portrait campaign arrives. */
+  .rose-home .home-hero-image { object-position: 70% center; }
+  .rose-home .home-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, transparent 32%, #F7D8D2E6 68%, #F7D8D2 100%); }
+  .rose-home .home-hero-copy { z-index: 1; align-self: flex-end; padding: 76px var(--page-pad) 32px; width: 100%; text-align: center; }
+  .rose-home .home-hero-copy h1 { font-size: clamp(43px, 9vw, 62px); line-height: 1.12; }
+  .rose-home .home-hero-copy > p:not(.micro-label) { max-width: none; margin: 18px 0 22px; font-size: 14px; }
+  .rose-home .home-hero-copy .micro-label { margin-bottom: 14px; }
+  .rose-home .row-intro { gap: 22px; }
+  .rose-home .category-section { padding-top: 12px; padding-bottom: 8px; }
+  .rose-home .category-editorial-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; gap: 28px 16px; }
+  .rose-home .category-tile { grid-column: auto; grid-row: auto; }
+  .rose-home .category-tile .category-media { aspect-ratio: 3 / 4; }
+  .rose-home .category-tile b { font-size: 24px; }
+  .rose-home .category-tile small { display: none; }
+  .rose-home .home-story { grid-template-columns: 1fr; gap: 36px; }
+  .rose-home .home-story > figure, .rose-home .home-stack > figure { width: 100%; }
+  .rose-home .home-story-copy { max-width: 520px; padding: 0; }
+  .rose-home .home-story-copy > p:not(.micro-label) { max-width: none; margin: 22px 0; }
+  .rose-home .home-occasions { padding: 40px 24px; }
+  .rose-home .home-occasion-grid { max-width: 420px; grid-template-columns: 1fr; gap: 32px; }
+  .rose-home .home-occasion { padding: 14px 14px 28px; }
+  .rose-home .home-occasion h3 { font-size: 32px; }
+  .rose-home .home-meadow { object-position: 48% center; }
+  .rose-home .home-bespoke .home-story-copy { padding-left: 0; }
+  .rose-home .home-bespoke-visual { grid-row: 1; padding: 0; }
+  .rose-home .home-worn { padding-top: 0; }
+  .rose-home .home-worn .row-intro { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .rose-home .home-worn .row-intro > p { max-width: none; margin: 0; }
+  .rose-home .home-worn-grid { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 18px; }
+  .rose-home .home-worn-grid a { flex: 0 0 82%; scroll-snap-align: start; }
+  .rose-home .home-concierge { padding: 36px 0 38px; gap: 18px; }
+  .rose-home > footer { display: block; padding-top: 52px; }
+  .rose-home .footer-brand { margin-bottom: 36px; }
+  .rose-home .footer-links { grid-template-columns: 1fr 1fr; gap: 32px 20px; }
+  .rose-home .footer-links a { font-size: 13px; }
+  .rose-home .newsletter { margin-top: 36px; }
+  .rose-home .footer-bottom { display: flex; gap: 11px; margin-top: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rose-home *, .rose-home *::before, .rose-home *::after { transition: none !important; animation: none !important; }
+}
+
+/* Shared header geometry, fonts and underline positioning match the other pages. */
+.rose-home .site-header, .rose-home .nav-overlay {
+  --sans: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif;
+  font-family: var(--sans);
+  line-height: normal;
+}
+.rose-home .home-photo-placeholder { width: 100%; position: relative; display: grid; place-items: center; border: 1px solid #D8D0CD; border-radius: 0; background: #EEE9E6; color: #746B66; overflow: hidden; }
+.rose-home .home-photo-placeholder > div { padding: 18px; text-align: center; }
+.rose-home .home-photo-placeholder strong { display: block; font-family: var(--sans); font-weight: 400; font-size: 11px; letter-spacing: .13em; line-height: 1.5; text-transform: uppercase; }
+.rose-home .home-photo-placeholder small { display: block; margin-top: 9px; font-size: 12px; letter-spacing: .08em; }
+.rose-home .home-occasion-photo { aspect-ratio: 4 / 3; margin-bottom: 12px; }
+.rose-home .home-bespoke-photo, .rose-home .home-worn-photo { aspect-ratio: 4 / 5; }
+@media (max-width: 700px) {
+  .rose-home .most-wanted h2 { font-size: clamp(25px, 7vw, 32px); line-height: 1.08; letter-spacing: 0; }
+  .rose-home .product-info h3 { font-size: 21px; }
+}
