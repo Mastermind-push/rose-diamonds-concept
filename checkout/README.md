@@ -13,6 +13,8 @@ This is a test-only payment flow for the GitHub Pages storefront. The Worker tal
 
 GitHub Pages is static. Its checkout will remain disabled until this Worker has been deployed on a separate HTTPS URL. Deployment is **not** done by the local build.
 
+Current sandbox Worker: `https://rose-airwallex-sandbox-checkout.rose-diamonds-sandbox.workers.dev`
+
 1. Deploy `checkout/wrangler.jsonc` to a Cloudflare account, with `AIRWALLEX_CLIENT_ID`, `AIRWALLEX_API_KEY`, and `AIRWALLEX_ACCOUNT_ID` set as Worker secrets; never commit them or set them as `VITE_` variables.
 2. Set `ALLOWED_ORIGINS` to the exact GitHub Pages origin (and any local development origins). The repository path is validated separately as the checkout return path.
 3. Build the Pages frontend with public `VITE_SANDBOX_CHECKOUT_API_URL=https://<worker-host>` and publish that build to the development Pages site.
