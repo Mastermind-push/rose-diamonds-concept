@@ -16,6 +16,7 @@ const base = process.env.GITHUB_ACTIONS && repositoryName && !isAccountSite
 
 export default defineConfig({
   root: "github-pages",
+  envDir: projectRoot,
   publicDir: "../public",
   base,
   resolve: {
@@ -30,7 +31,7 @@ export default defineConfig({
       const output = resolve(projectRoot, "dist-pages");
       const html = await readFile(resolve(output, "index.html"), "utf8");
       const routes = [
-        "our-philosophy", "design-your-piece", "consultation", "wishlist", "bag", "admin",
+        "our-philosophy", "design-your-piece", "consultation", "wishlist", "bag", "checkout", "checkout/result", "admin",
         ...Object.keys(catalogConfigs).map((slug) => `collections/${slug}`),
         ...products.map((product) => `products/${product.id}`),
         ...policies.map((policy) => `policies/${policy.slug}`),

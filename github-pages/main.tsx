@@ -9,6 +9,7 @@ import DesignYourPieceView from "../components/design-your-piece-view";
 import ConsultationView from "../components/consultation-view";
 import WishlistView from "../components/wishlist-view";
 import BagView from "../components/bag-view";
+import { SandboxCheckoutView, SandboxPaymentResultView } from "../components/sandbox-checkout-view";
 import AdminCatalogView from "../components/admin-catalog-view";
 import PolicyView from "../components/policy-view";
 import { catalogConfigs, type CatalogSlug } from "../data/catalog";
@@ -58,6 +59,8 @@ function Page() {
   if (path === "consultation") return <ConsultationView />;
   if (path === "wishlist") return <WishlistView />;
   if (path === "bag") return <BagView />;
+  if (path === "checkout") return <SandboxCheckoutView />;
+  if (path === "checkout/result") return <SandboxPaymentResultView />;
   if (path === "admin") return <AdminCatalogView />;
   return <main className="utility-page"><h1>Page not found</h1><a href={base}>Back to ROSÉ</a></main>;
 }

@@ -306,13 +306,13 @@ export default function ProductDetailView({ productId = "pink-bloom" }: { produc
             </div>}
 
             <button className={`pdp-add${added ? " is-added" : ""}`} type="button" disabled={Boolean((selection && !selectedSize) || !canPurchase)} onClick={addToBag}>{added ? "ADDED TO BAG" : "ADD TO BAG"}</button>
-            <p className="pdp-service-note">Complimentary insured delivery{selection ? " · Personal sizing support" : " · Personal concierge support"}</p>
+            <p className="pdp-service-note">Complimentary insured delivery · Taxes and duties included</p>
 
             <dl className="pdp-specs">{specs.map(([term, value]) => <div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl>
 
             <div className="pdp-accordions pdp-service-accordions">
               <ProductAccordion title="Certification & sourcing"><p>ROSÉ works with both natural and laboratory-grown diamonds. Natural diamonds are accompanied by GIA documentation where applicable; laboratory-grown diamonds are accompanied by IGI documentation where applicable.</p><div className="pdp-certifications" aria-label="Certification laboratories"><span>GIA</span><span>IGI</span></div><a className="pdp-policy-link" href="/policies/ethical-sourcing">Read our Ethical Sourcing Policy</a></ProductAccordion>
-              <ProductAccordion title="Delivery & returns"><p>Your piece is delivered fully insured. Timing, destination availability and any applicable duties are confirmed during checkout or by our concierge.</p><a className="pdp-policy-link" href="/policies/delivery-and-returns">Read our Delivery &amp; Returns Policy</a></ProductAccordion>
+              <ProductAccordion title="Delivery & returns"><p>Complimentary insured delivery, taxes and duties are included in the displayed price. The total shown at checkout is the final amount you pay.</p><a className="pdp-policy-link" href="/policies/delivery-and-returns">Read our Delivery &amp; Returns Policy</a></ProductAccordion>
             </div>
           </div>
         </aside>

@@ -28,8 +28,8 @@
   --line: #DDD6D1;
   --rose: #8C4351;
   --garden: #263E2D;
-  --display: "Rose Bodoni", "Bodoni 72", Didot, serif;
-  --sans: "Rose Manrope", "Helvetica Neue", sans-serif;
+  --display: "Rose Dollar", "Rose Bodoni", "Bodoni 72", Didot, serif;
+  --sans: "Rose Dollar", "Rose Manrope", "Helvetica Neue", sans-serif;
   --page-pad: clamp(24px, 5vw, 80px);
   background: var(--paper);
   color: var(--ink);
@@ -64,7 +64,7 @@
 .rose-home .home-button:hover .ui-arrow { filter: invert(1); }
 
 /* Original Our Selection merchandising and typography. */
-.rose-home .most-wanted { --display: "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif; --sans: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-family: var(--sans); line-height: normal; }
+.rose-home .most-wanted { --display: "Rose Dollar", "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif; --sans: "Rose Dollar", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-family: var(--sans); line-height: normal; }
 .rose-home .most-wanted h2 { font-size: clamp(24px, 2.25vw, 34px); line-height: 1.07; letter-spacing: -.012em; }
 .rose-home .most-wanted .section-intro { margin-bottom: 36px; }
 .rose-home .most-wanted .underlined-link { padding: 0 0 5px; font-size: 8px; letter-spacing: .14em; line-height: normal; gap: 9px; }
@@ -178,8 +178,8 @@
 
 /* Shared header geometry, fonts and underline positioning match the other pages. */
 .rose-home .site-header, .rose-home .nav-overlay {
-  --sans: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --display: "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif;
+  --sans: "Rose Dollar", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Rose Dollar", "Bodoni 72", Didot, "Bodoni MT", "Times New Roman", serif;
   font-family: var(--sans);
   line-height: normal;
 }
